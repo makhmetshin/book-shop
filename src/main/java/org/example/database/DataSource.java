@@ -17,8 +17,8 @@ public class DataSource {
     private Set<Shop> shops = new HashSet<>();
     private Set<Warehouse> warehouses = new HashSet<>();
     private Set<Bill> bills = new HashSet<>();
-    private Set<ShopBook> shopBooks = new HashSet<>();
-    private Set<WarehouseBook> warehouseBooks = new HashSet<>();
+    private Set<StorageBook> shopBooks = new HashSet<>();
+    private Set<StorageBook> warehouseBooks = new HashSet<>();
     private Set<Order> orders = new HashSet<>();
 
     private DataSource() {
@@ -66,7 +66,7 @@ public class DataSource {
         for (int i = 1; i <= 10; i++) {
             for (int j = 1; j <= 10; j++) {
                 WarehouseBook warehouseBook = WarehouseBook.builder()
-                        .warehouseId(i)
+                        .storageId(i)
                         .bookId(j)
                         .bookAmount(i * 1000)
                         .build();
@@ -77,7 +77,7 @@ public class DataSource {
         for (int i = 1; i <= 10; i++) {
             for(int j = 1; j <= 10; j++) {
                 ShopBook shopBook = ShopBook.builder()
-                        .shopId(i)
+                        .storageId(i)
                         .bookId(j)
                         .bookAmount(i * 1000)
                         .build();

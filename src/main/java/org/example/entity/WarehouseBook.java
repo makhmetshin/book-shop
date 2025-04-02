@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class WarehouseBook {
+public class WarehouseBook implements StorageBook {
 
-    private Integer warehouseId;
+    private Integer storageId;
     private Integer bookId;
     private Integer bookAmount;
 

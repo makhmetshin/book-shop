@@ -4,6 +4,7 @@ import org.example.dao.BookDao;
 import org.example.dao.WarehouseBookDao;
 import org.example.dao.WarehouseDao;
 import org.example.entity.Book;
+import org.example.entity.StorageBook;
 import org.example.entity.WarehouseBook;
 import java.util.List;
 import java.util.Set;
@@ -26,11 +27,11 @@ public class WarehouseService {
     public Set<Book> findAllBooks(Integer warehouseId) {
         Set<Book> books = bookDao.findAll();
 
-        Set<WarehouseBook> warehouseBooks = warehouseBookDao.findAll();
+        Set<StorageBook> warehouseBooks = warehouseBookDao.findAll();
 
         Set<Integer> idsBooksInWarehouse =  warehouseBooks.stream()
-                .filter(wb -> wb.getWarehouseId().equals(warehouseId) )
-                .map(WarehouseBook::getBookId)
+                .filter(wb -> wb.getStorageId().equals(warehouseId) )
+                .map(StorageBook::getBookId)
                 .collect(Collectors.toSet());
 
         return books.stream()
@@ -52,7 +53,7 @@ public class WarehouseService {
         warehouseBookDao.addBooks(books, warehouseId);
     }
 
-    public WarehouseBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
+    public StorageBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
         return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId).get();
     }
 

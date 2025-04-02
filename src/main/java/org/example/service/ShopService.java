@@ -91,11 +91,11 @@ public class ShopService {
         return bookDao.findBooksByAuthorAndTitle(author, title);
     }
 
-    public ShopBook findShopBookByIds(Integer bookId, Integer shopId) {
+    public StorageBook findShopBookByIds(Integer bookId, Integer shopId) {
         return shopBookDao.findByShopIdAndBookId(shopId, bookId).get();
     }
 
-    public WarehouseBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
+    public StorageBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
         return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId).get();
     }
 
