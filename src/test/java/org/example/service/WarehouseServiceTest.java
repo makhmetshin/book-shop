@@ -32,15 +32,15 @@ public class WarehouseServiceTest {
     @Test
     public void addBookTest() {
         warehouseService.addBook(1,1,100);
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(1100);
 
         warehouseService.addBook(1,5,5000);
-        assertThat(warehouseService.findWarehouseBookByIds(1,5).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,5).get().getBookAmount())
                 .isEqualTo(10000);
 
         warehouseService.addBook(1,10,5000);
-        assertThat(warehouseService.findWarehouseBookByIds(1,10).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,10).get().getBookAmount())
                 .isEqualTo(15000);
 
     }
@@ -48,13 +48,13 @@ public class WarehouseServiceTest {
     @Test
     public void removeBookTest() {
         warehouseService.removeBook(1,1, 100);
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(900);
         warehouseService.removeBook(1,1, 500);
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(400);
         warehouseService.removeBook(1,1, 400);
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(0);
     }
 
@@ -68,28 +68,28 @@ public class WarehouseServiceTest {
         }
         warehouseService.addBooks(books, 1);
 
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(1100);
-        assertThat(warehouseService.findWarehouseBookByIds(2,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(2,1).get().getBookAmount())
                 .isEqualTo(1100);
-        assertThat(warehouseService.findWarehouseBookByIds(3,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(3,1).get().getBookAmount())
                 .isEqualTo(1100);
 
         books.clear();
         warehouseService.addBooks(books, 1);
 
-        assertThat(warehouseService.findWarehouseBookByIds(1,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,1).get().getBookAmount())
                 .isEqualTo(1100);
-        assertThat(warehouseService.findWarehouseBookByIds(2,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(2,1).get().getBookAmount())
                 .isEqualTo(1100);
-        assertThat(warehouseService.findWarehouseBookByIds(3,1).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(3,1).get().getBookAmount())
                 .isEqualTo(1100);
 
     }
 
     @Test
     public void findWarehouseBookByIdsTest() {
-        assertThat(warehouseService.findWarehouseBookByIds(1,5).getBookAmount())
+        assertThat(warehouseService.findWarehouseBookByIds(1,5).get().getBookAmount())
                 .isEqualTo(5000);
     }
 

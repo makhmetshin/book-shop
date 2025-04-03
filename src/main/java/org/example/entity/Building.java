@@ -1,12 +1,9 @@
 package org.example.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
+@NoArgsConstructor
 public abstract class Building {
     private Integer id;
     private String address;

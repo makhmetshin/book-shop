@@ -25,21 +25,17 @@ public class BookDaoTest  {
 
     @Test
     public void findAllTest() {
-        System.out.println(dao);
         assertTrue(dao.findAll().size() == 10);
 
     }
 
     @Test
     public void findByIdTest() {
-        System.out.println(dao);
         assertTrue(dao.findById(1).get().getTitle().equals("Book One"));
         assertTrue(dao.findById(5).get().getTitle().equals("Book Five"));
         assertTrue(dao.findById(10).get().getTitle().equals("Book Ten"));
     }
-//
-//    @Test
-//    @RepeatedTest(value = 50)
+
     @Test
     public void deleteTest() {
 
@@ -51,12 +47,9 @@ public class BookDaoTest  {
     @Test
     public void saveTest() {
 
-        System.out.println(dao.findAll().size());
         dao.save(Book.builder().build());
-        System.out.println(dao.findAll().size());
 
         assertThat(dao.findAll().size()).isEqualTo(11) ;
-
 
     }
 

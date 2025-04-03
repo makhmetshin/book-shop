@@ -28,7 +28,8 @@ public class ShopDao  {
     public Optional<Shop> findById(Integer id) {
 
         for (Shop shop : shops)
-            if(shop.getId().equals(id)) return Optional.of(shop);
+            if(shop.getId().equals(id))
+                return Optional.of(shop);
 
         return Optional.empty();
     }

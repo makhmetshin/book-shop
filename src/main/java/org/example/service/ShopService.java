@@ -5,6 +5,7 @@ import org.example.entity.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class ShopService {
@@ -59,9 +60,15 @@ public class ShopService {
 
     public void distributeBooks( Integer bookId, List<Integer> shopIds, Integer warehouseId, Integer amount) {
 
+        if (shopIds.isEmpty()) {
+            System.out.println("shopIds is empty in distributeBooks()");
+            return;
+        }
+
         int booksPerShop = amount / shopIds.size();
         int remainder = amount % shopIds.size();
         Integer firstShopId = 0;
+
 
         transportBooksFromWarehouse(bookId, warehouseId, shopIds.get(firstShopId), remainder);
 
@@ -91,12 +98,12 @@ public class ShopService {
         return bookDao.findBooksByAuthorAndTitle(author, title);
     }
 
-    public StorageBook findShopBookByIds(Integer bookId, Integer shopId) {
-        return shopBookDao.findByShopIdAndBookId(shopId, bookId).get();
+    public Optional<? extends StorageBook> findShopBookByIds(Integer bookId, Integer shopId) {
+        return shopBookDao.findByShopIdAndBookId(shopId, bookId);
     }
 
-    public StorageBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
-        return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId).get();
+    public Optional<? extends StorageBook> findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
+        return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId);
     }
 
 }

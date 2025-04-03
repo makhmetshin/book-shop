@@ -69,7 +69,7 @@ public class WebShopService {
 
     public void cancelOrder(Integer orderId) {
 
-        Order order = orderDao.findById(orderId);
+        Order order = orderDao.findById(orderId).get();
         order.setStatus(Status.CANCELLED);
 
         Integer warehouseId = order.getDepartureWarehouse();
@@ -86,7 +86,7 @@ public class WebShopService {
             cancelOrder(orderId);
             return;
         }
-        Order order = orderDao.findById(orderId);
+        Order order = orderDao.findById(orderId).get();
         order.setStatus(status);
     }
 

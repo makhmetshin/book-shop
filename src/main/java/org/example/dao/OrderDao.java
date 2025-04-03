@@ -4,6 +4,7 @@ import org.example.database.DataSource;
 import org.example.entity.Order;
 import org.example.entity.ShopBook;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class OrderDao {
@@ -18,12 +19,11 @@ public class OrderDao {
         return new OrderDao();
 //        return INSTANCE;
     }
-    public Order findById(Integer id) {
+    public Optional<Order> findById(Integer id) {
 
         return orders.stream()
                 .filter(it -> it.getOrderId().equals(id))
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
     }
     public void save(Order order) {
         orders.add(order);

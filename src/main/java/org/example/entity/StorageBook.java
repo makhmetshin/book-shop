@@ -3,13 +3,11 @@ package org.example.entity;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
+public abstract class StorageBook {
 
-public interface StorageBook {
-    Integer getStorageId();
-    Integer getBookId();
-    Integer getBookAmount();
+    private Integer storageId;
+    private Integer bookId;
+    private Integer bookAmount;
 
-    void setStorageId(Integer storageId);
-    void setBookId(Integer bookId);
-    void setBookAmount(Integer bookAmount);
 }

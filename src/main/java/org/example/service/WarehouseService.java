@@ -7,6 +7,7 @@ import org.example.entity.Book;
 import org.example.entity.StorageBook;
 import org.example.entity.WarehouseBook;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,8 +54,8 @@ public class WarehouseService {
         warehouseBookDao.addBooks(books, warehouseId);
     }
 
-    public StorageBook findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
-        return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId).get();
+    public Optional<? extends StorageBook> findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
+        return warehouseBookDao.findByWarehouseIdAndBookId(warehouseId, bookId);
     }
 
 }
