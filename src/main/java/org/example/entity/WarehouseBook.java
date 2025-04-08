@@ -1,14 +1,12 @@
 package org.example.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
+@ToString(callSuper=true)
 public class WarehouseBook extends StorageBook {
 
     private Integer storageId;

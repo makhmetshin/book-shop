@@ -6,6 +6,7 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
+@ToString(callSuper=true)
 public class Shop extends Building {
     public Shop(Integer id, String address, String city) {
         super(id, address, city);

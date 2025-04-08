@@ -4,62 +4,45 @@ import org.example.database.DataSource;
 import org.example.entity.Book;
 import org.example.entity.StorageBook;
 import org.example.entity.WarehouseBook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 public class StorageBookDao {
-    Set<StorageBook> storageBooks;
+    private Set<StorageBook> storageBooks;
 
     public StorageBookDao(Set<StorageBook> storageBooks) {
         this.storageBooks = storageBooks;
     }
 
-    private final static StorageBookDao INSTANCE = new StorageBookDao();
-
-    private StorageBookDao () {}
-
-//    public static ShopBookDao getInstance() {
-//        return new ShopBookDao();
-////        return INSTANCE;
-//    }
-    private DataSource dataSource = DataSource.getInstance();
-
+    public StorageBookDao () {}
 
     public Set<StorageBook> findAll() {
-        return dataSource.getWarehouseBooks();
-
+        return storageBooks;
     }
 
-    public Optional<StorageBook> findByStorageIdAndBookId(Integer warehouseId, Integer bookId) {
+    public Optional<StorageBook> findByStorageIdAndBookId(Integer storageId, Integer bookId) {
 
         for (StorageBook sb : storageBooks)
-            if (sb.getStorageId().equals(warehouseId) && sb.getBookId().equals(bookId))
+            if (sb.getStorageId().equals(storageId) && sb.getBookId().equals(bookId))
                 return Optional.of(sb);
 
         return Optional.empty();
     }
 
-    public void addBook(Integer bookId, Integer warehouseId, int amount) {
+    public boolean addExistingBook(Integer bookId, Integer storageId, int amount) {
 
-
-        for (StorageBook sb : storageBooks) {
-            if (sb.getStorageId().equals(warehouseId) && sb.getBookId().equals(bookId)) {
+        for (StorageBook sb : storageBooks)
+            if (sb.getStorageId().equals(storageId) && sb.getBookId().equals(bookId)) {
 
                 sb.setBookAmount(sb.getBookAmount() + amount);
-                return;
+                return true;
             }
-        }
-
-        WarehouseBook newBook = WarehouseBook.builder()
-                .storageId(warehouseId)
-                .bookId(bookId)
-                .bookAmount(amount)
-                .build();
-        storageBooks.add(newBook);
+        return false;
     }
 
     public void removeBook(Integer bookId, Integer storageId, int amount) {
-
 
         for (StorageBook sb : storageBooks) {
             if (sb.getBookId().equals(bookId) && sb.getStorageId().equals(storageId)) {
@@ -77,24 +60,10 @@ public class StorageBookDao {
         }
     }
 
-    public void addBooks(List<Book> books, Integer storageId) {
-        Map<Integer, Integer> bookCountMap = new HashMap<>();
 
-        for (Book book : books) {
-            bookCountMap.put(book.getId(), bookCountMap.getOrDefault(book.getId(), 0) + 1);
-        }
-
-        for (Map.Entry<Integer, Integer> entry : bookCountMap.entrySet()) {
-            Integer bookId = entry.getKey();
-            Integer amount = entry.getValue();
-
-            addBook(bookId, storageId, amount);
-        }
-    }
-
-    public Integer getAmountOfBook(Integer bookId, Integer warehouseId) {
+    public Integer getAmountOfBook(Integer bookId, Integer storageId) {
         for (StorageBook sb : storageBooks)
-            if (sb.getBookId().equals(bookId) && sb.getStorageId().equals(warehouseId))
+            if (sb.getBookId().equals(bookId) && sb.getStorageId().equals(storageId))
                 return sb.getBookAmount();
         return 0;
     }

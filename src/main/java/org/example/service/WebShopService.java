@@ -5,26 +5,37 @@ import org.example.entity.Book;
 import org.example.entity.Order;
 import org.example.entity.Status;
 import org.example.entity.WarehouseBook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Set;
 
-
+@Service
 public class WebShopService {
 
     private int orderIdSequence = 1;
 
-    private ShopBookDao shopBookDao = ShopBookDao.getInstance();
-    private WarehouseBookDao warehouseBookDao = WarehouseBookDao.getInstance();
-    private BookDao bookDao = BookDao.getInstance();
-    private OrderDao orderDao = OrderDao.getInstance();
 
-    private final static WebShopService  INSTANCE = new WebShopService ();
-    private WebShopService () {}
+    private WarehouseBookDao warehouseBookDao;
+    private BookDao bookDao;
+    private OrderDao orderDao;
+    @Autowired
+    public WebShopService( WarehouseBookDao warehouseBookDao, BookDao bookDao, OrderDao orderDao) {
+        this.warehouseBookDao = warehouseBookDao;
+        this.bookDao = bookDao;
+        this.orderDao = orderDao;
+    }
+
+    public WebShopService () {}
 
     public static WebShopService  getInstance() {
         return new WebShopService();
 //        return INSTANCE;
+    }
+    public Set<Order> findOrdersByFio(String customerFio) {
+        return orderDao.findByCustomerFio(customerFio);
     }
 
     public Order createOrder(String customerFio, Integer warehouseId, Integer arrivalShopId, Map<Integer, Integer> orderItems ) {

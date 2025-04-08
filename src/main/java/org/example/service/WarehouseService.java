@@ -6,22 +6,31 @@ import org.example.dao.WarehouseDao;
 import org.example.entity.Book;
 import org.example.entity.StorageBook;
 import org.example.entity.WarehouseBook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class WarehouseService {
 
-    private WarehouseDao warehouseDao = WarehouseDao.getInstance();
-    private WarehouseBookDao warehouseBookDao = WarehouseBookDao.getInstance();
-    private BookDao bookDao = BookDao.getInstance();
+    private WarehouseBookDao warehouseBookDao;
+    private BookDao bookDao;
 
-    private final static WarehouseService  INSTANCE = new WarehouseService ();
-    private WarehouseService () {}
+    @Autowired
+    public WarehouseService(WarehouseBookDao warehouseBookDao, BookDao bookDao) {
+        this.warehouseBookDao = warehouseBookDao;
+        this.bookDao = bookDao;
+    }
+
+    public WarehouseService () {}
 
     public static WarehouseService  getInstance() {
-        return new WarehouseService ();
+        return null;
 //        return INSTANCE;
     }
 

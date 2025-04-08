@@ -2,29 +2,44 @@ package org.example.service;
 
 import org.example.dao.*;
 import org.example.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+@Service
 public class ShopService {
 
     private int orderIdSequence = 1;
 
-    private ShopBookDao shopBookDao = ShopBookDao.getInstance();
-    private WarehouseBookDao warehouseBookDao = WarehouseBookDao.getInstance();
-    private BillDao billDao = BillDao.getInstance();
-    private BookDao bookDao = BookDao.getInstance();
-    private ShopDao shopDao = ShopDao.getInstance();
+    private ShopBookDao shopBookDao;
+    private WarehouseBookDao warehouseBookDao;
 
-    private final static ShopService  INSTANCE = new ShopService ();
-    private ShopService () {}
+    private BillDao billDao;
+    private BookDao bookDao;
+    private ShopDao shopDao;
+
+    @Autowired
+    public ShopService(ShopBookDao shopBookDao, WarehouseBookDao warehouseBookDao,
+                       BillDao billDao, BookDao bookDao, ShopDao shopDao) {
+        this.shopBookDao = shopBookDao;
+        this.warehouseBookDao = warehouseBookDao;
+        this.billDao = billDao;
+        this.bookDao = bookDao;
+        this.shopDao = shopDao;
+    }
+
+    public ShopService () {}
 
     public static ShopService  getInstance() {
         return new ShopService ();
 //        return INSTANCE;
     }
+
 
     public Set<Shop> findAllShops() {
         return shopDao.findAll();

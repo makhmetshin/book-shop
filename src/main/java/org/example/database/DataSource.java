@@ -2,6 +2,7 @@ package org.example.database;
 
 import lombok.Data;
 import org.example.entity.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@Component
 public class DataSource {
 
     private static final DataSource INSTANCE = new DataSource();
@@ -21,15 +23,16 @@ public class DataSource {
     private Set<StorageBook> warehouseBooks = new HashSet<>();
     private Set<Order> orders = new HashSet<>();
 
-    private DataSource() {
+    public DataSource() {
 
     }
 
     public static DataSource getInstance() {
-        return new DataSource();
+        return null ;//new DataSource();
     }
 
     {
+
         books.add(new Book(1, "978-3-16-148410-0", "Book One", "Author One", "Publisher One", 200, "Fiction", "Description of Book One", LocalDate.of(2020, 1, 15)));
         books.add(new Book(2, "978-3-16-148410-1", "Book Two", "Author Two", "Publisher Two", 250, "Non-Fiction", "Description of Book Two", LocalDate.of(2021, 5, 20)));
         books.add(new Book(3, "978-3-16-148410-2", "Book Three", "Author Three", "Publisher Three", 300, "Fantasy", "Description of Book Three", LocalDate.of(2019, 8, 10)));

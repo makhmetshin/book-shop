@@ -3,35 +3,38 @@ package org.example.dao;
 
 import org.example.database.DataSource;
 import org.example.entity.Book;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@Component
 public class BookDao  {
 
-    private DataSource dataSource = DataSource.getInstance();
+    private DataSource dataSource;
+    private Set<Book> books;
 
-    private final static BookDao INSTANCE = new BookDao();
-
-    private BookDao () {}
+    public BookDao() {}
 
     public static BookDao getInstance() {
-        return new BookDao();
-//        return INSTANCE;
+        return null;
     }
 
-    Set<Book> books = dataSource.getBooks();
-
+    @Autowired
+    public BookDao (DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public Set<Book> findAll() {
-        return books;
+        return dataSource.getBooks();
     }
+
 
 
     public Optional<Book> findById(Integer id) {
-
+        books = dataSource.getBooks();
         for (Book book : books)
             if(book.getId().equals(id)) return Optional.of(book);
 
@@ -40,16 +43,16 @@ public class BookDao  {
 
 
     public boolean delete(Integer id) {
-        return books.removeIf(book -> book.getId().equals(id));
+        return dataSource.getBooks().removeIf(book -> book.getId().equals(id));
     }
 
 
     public void save(Book book) {
-        books.add(book);
+        dataSource.getBooks().add(book);
     }
 
     public Set<Book> findBooksByGenreAndAuthor(String genre, String author) {
-        return books.stream()
+        return dataSource.getBooks().stream()
                 .filter(book -> (genre == null || book.getGenre().equalsIgnoreCase(genre)) &&
                                 (author == null || book.getAuthor().equalsIgnoreCase(author))
                 )
@@ -64,7 +67,7 @@ public class BookDao  {
     }
 
     public Set<Book> findBooksByAuthorAndTitle(String author, String title) {
-        return books.stream()
+        return dataSource.getBooks().stream()
                 .filter(book -> (author == null || book.getAuthor().toLowerCase().contains(author.toLowerCase())) &&
                         (title == null || book.getTitle().toLowerCase().contains(title.toLowerCase())))
                 .collect(Collectors.toSet());

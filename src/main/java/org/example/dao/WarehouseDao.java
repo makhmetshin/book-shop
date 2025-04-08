@@ -2,24 +2,29 @@ package org.example.dao;
 
 import org.example.database.DataSource;
 import org.example.entity.Warehouse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
-
+@Component
 public class WarehouseDao {
 
-    private DataSource dataSource = DataSource.getInstance();
+    private DataSource dataSource;
 
-    private final static  WarehouseDao INSTANCE = new WarehouseDao();
+    public WarehouseDao() {}
 
-    private WarehouseDao() {}
+    @Autowired
+    public WarehouseDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public static WarehouseDao getInstance() {
         return new WarehouseDao();
 //        return INSTANCE;
     }
 
-    public Set<Warehouse> findAll(Integer warehouseId) {
+    public Set<Warehouse> findAll() {
         return  dataSource.getWarehouses();
     }
 
