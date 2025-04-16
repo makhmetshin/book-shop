@@ -1,7 +1,7 @@
 package ru.ifellow.jschool.machmetshin.dao;
 
 import ru.ifellow.jschool.machmetshin.database.DataSource;
-import ru.ifellow.jschool.machmetshin.entity.Order;
+import ru.ifellow.jschool.machmetshin.entity.order.Order;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

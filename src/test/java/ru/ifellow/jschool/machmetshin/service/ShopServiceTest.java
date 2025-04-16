@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions;
 import ru.ifellow.jschool.machmetshin.dao.BookDao;
 import org.example.entity.*;
 import org.junit.jupiter.api.Test;
-import ru.ifellow.jschool.machmetshin.entity.Bill;
-import ru.ifellow.jschool.machmetshin.entity.ShopBook;
+import ru.ifellow.jschool.machmetshin.entity.order.Bill;
+import ru.ifellow.jschool.machmetshin.entity.storage.ShopBook;
 
 import java.util.ArrayList;
 import java.util.HashMap;

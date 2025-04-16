@@ -1,25 +1,25 @@
-package ru.ifellow.jschool.machmetshin.entity;
+package ru.ifellow.jschool.machmetshin.entity.good;
 
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Builder
 @Data
 @AllArgsConstructor
-public class Book {
-    private Integer id;
+@NoArgsConstructor
+@Entity
+public class Book extends Good{
+
     private String ISBN;
     private String title;
     private String author;
     private String publisher;
-    private int price;
     private String genre;
-    private String description;
     private LocalDate publishedDate;
-
-
 
 }

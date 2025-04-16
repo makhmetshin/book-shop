@@ -2,7 +2,7 @@ package ru.ifellow.jschool.machmetshin.dao;
 
 
 import ru.ifellow.jschool.machmetshin.database.DataSource;
-import ru.ifellow.jschool.machmetshin.entity.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.Book;
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;

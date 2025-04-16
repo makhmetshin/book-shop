@@ -1,4 +1,4 @@
-package ru.ifellow.jschool.machmetshin.entity;
+package ru.ifellow.jschool.machmetshin.entity.order;
 
 public enum Status {
 

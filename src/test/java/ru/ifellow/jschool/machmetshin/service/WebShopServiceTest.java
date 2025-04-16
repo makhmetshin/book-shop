@@ -1,8 +1,8 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 
-import ru.ifellow.jschool.machmetshin.entity.Order;
-import ru.ifellow.jschool.machmetshin.entity.Status;
+import ru.ifellow.jschool.machmetshin.entity.order.Order;
+import ru.ifellow.jschool.machmetshin.entity.order.Status;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

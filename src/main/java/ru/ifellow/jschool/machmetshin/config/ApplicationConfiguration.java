@@ -1,7 +1,7 @@
 package ru.ifellow.jschool.machmetshin.config;
 
 
-import ru.ifellow.jschool.machmetshin.dao.BillDao;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
