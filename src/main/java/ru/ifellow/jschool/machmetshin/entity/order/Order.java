@@ -1,23 +1,22 @@
 package ru.ifellow.jschool.machmetshin.entity.order;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
-import ru.ifellow.jschool.machmetshin.entity.good.Good;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
+@ToString(exclude = "orderItems")
+@EqualsAndHashCode(exclude = "orderItems")
 @Table(name = "Orders")
 public class Order {
     @Id

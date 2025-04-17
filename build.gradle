@@ -32,7 +32,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation group: 'org.springframework', name: 'spring-core'
     implementation group: 'org.springframework', name: 'spring-context'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'org.assertj:assertj-core'
     testImplementation platform('org.junit:junit-bom')

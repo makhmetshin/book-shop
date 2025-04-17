@@ -2,7 +2,7 @@ package ru.ifellow.jschool.machmetshin.entity.storage;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.ifellow.jschool.machmetshin.entity.good.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 
 
 @NoArgsConstructor
@@ -15,8 +15,12 @@ import ru.ifellow.jschool.machmetshin.entity.good.Book;
             @UniqueConstraint(columnNames = {"shop_id", "book_id"})
     }
 )
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @Entity
-public class ShopBook{
+public class ShopBook implements StorageGood{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +37,5 @@ public class ShopBook{
     private Integer bookAmount;
 
 
-//    @Builder
-//    public ShopBook(Integer storageId, Integer bookId, Integer bookAmount) {
-//        super(storageId, bookId, bookAmount);
-//    }
+
 }

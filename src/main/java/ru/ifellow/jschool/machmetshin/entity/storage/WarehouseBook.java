@@ -2,7 +2,7 @@ package ru.ifellow.jschool.machmetshin.entity.storage;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.ifellow.jschool.machmetshin.entity.good.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 
 
 @NoArgsConstructor
@@ -10,8 +10,12 @@ import ru.ifellow.jschool.machmetshin.entity.good.Book;
 //@ToString(callSuper=true)
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @Entity
-public class WarehouseBook {
+public class WarehouseBook implements StorageGood{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +30,5 @@ public class WarehouseBook {
     private Book book;
 
     private Integer bookAmount;
-//    @Builder
-//    public WarehouseBook(Integer storageId, Integer bookId, Integer bookAmount) {
-//        super(storageId, bookId, bookAmount);
-//    }
+
 }

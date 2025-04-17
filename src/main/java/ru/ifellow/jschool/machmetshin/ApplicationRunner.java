@@ -41,6 +41,7 @@ public class ApplicationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+//        bookRepository.findB
         var smth = bookRepository.findAll().stream().toList();
         System.out.println(smth);
 

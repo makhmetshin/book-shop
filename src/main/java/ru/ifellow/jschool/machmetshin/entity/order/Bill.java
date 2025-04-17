@@ -1,10 +1,7 @@
 package ru.ifellow.jschool.machmetshin.entity.order;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 
 import java.time.LocalDate;

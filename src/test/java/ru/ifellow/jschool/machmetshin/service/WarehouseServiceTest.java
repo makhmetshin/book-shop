@@ -1,6 +1,6 @@
 package ru.ifellow.jschool.machmetshin.service;
 
-import ru.ifellow.jschool.machmetshin.entity.good.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
