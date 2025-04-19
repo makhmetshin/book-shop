@@ -1,6 +1,7 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ru.ifellow.jschool.machmetshin.entity.order.Order;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
 import ru.ifellow.jschool.machmetshin.entity.order.Status;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
+import ru.ifellow.jschool.machmetshin.entity.user.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,13 +32,14 @@ public class WebShopManagerService {
     private WarehouseService warehouseService;
     private ShopService shopService;
     private BillService billService;
+    private UserService userService;
 
-    public Set<Order> findOrderByFio(String customerFio) {
-        return orderService.findByCustomerFio(customerFio);
-    }
+//    public Set<Order> findOrderByFio(String customerFio) {
+//        return orderService.findByCustomerFio(customerFio);
+//    }
 
     @Transactional
-    public Order createOrder(String customerFio, Integer warehouseId, Integer arrivalShopId, List<OrderItem> orderItems ) {
+    public Order createOrder(Integer userId, Integer warehouseId, Integer arrivalShopId, List<OrderItem> orderItems ) {
 
         int totalPrice = 0;
         LocalDate today = LocalDate.now();
@@ -59,9 +62,10 @@ public class WebShopManagerService {
             Book book = bookService.findById(bookId).get();
             totalPrice += book.getPrice() * amount;
         }
+        User user = userService.findById(userId).get();
 
         Order order = Order.builder()
-                .customerFio(customerFio)
+                .user(user)
                 .orderItems(orderItems.stream().collect(Collectors.toSet()) )
                 .orderDate(today)
                 .arrivalDate(today.plusDays(5))
@@ -109,9 +113,7 @@ public class WebShopManagerService {
         Bill bill = Bill.builder()
                 .order(order)
                 .shop(order.getArrivalShop())
-                .customerFio(order.getCustomerFio())
                 .date(LocalDate.now())
-                .summa(order.getTotalPrice())
                 .build();
 
         billService.save(bill);

@@ -8,8 +8,8 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @NoArgsConstructor
 //@EqualsAndHashCode(callSuper=true)
 //@ToString(callSuper=true)
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode( exclude = {"warehouse", "book"})
+@ToString( exclude = {"warehouse", "book"})
 @AllArgsConstructor
 @Builder
 @Getter

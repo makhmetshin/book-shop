@@ -1,21 +1,23 @@
 package ru.ifellow.jschool.machmetshin.entity.good.book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
+import ru.ifellow.jschool.machmetshin.entity.storage.ShopBook;
+import ru.ifellow.jschool.machmetshin.entity.storage.WarehouseBook;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(callSuper = true, exclude = {"shopBooks", "warehouseBooks"})
+@ToString(callSuper = true, exclude = {"shopBooks", "warehouseBooks"})
+@PrimaryKeyJoinColumn(name="id")
 public class Book extends Good {
 
     private String ISBN;
@@ -29,6 +31,14 @@ public class Book extends Good {
     @ManyToOne
     @JoinColumn(name = "publisher_id", referencedColumnName = "id")
     private Publisher publisher;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<ShopBook> shopBooks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<WarehouseBook> warehouseBooks = new ArrayList<>();
 
     private String genre;
     private LocalDate publishedDate;

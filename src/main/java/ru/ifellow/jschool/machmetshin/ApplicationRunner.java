@@ -41,23 +41,23 @@ public class ApplicationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        bookRepository.findB
-        var smth = bookRepository.findAll().stream().toList();
-        System.out.println(smth);
-
-        System.out.println("Все книги в базе данных:");
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            System.out.println(">>> Таблицы в базе данных:");
-            try (ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
-                while (tables.next()) {
-                    String schema = tables.getString("TABLE_SCHEM");
-                    String tableName = tables.getString("TABLE_NAME");
-                    System.out.printf("Схема: %s, Таблица: %s%n", schema, tableName);
-                }
-            }
-        }
+////        bookRepository.findB
+//        var smth = bookRepository.findAll().stream().toList();
+//        System.out.println(smth);
+//
+//        System.out.println("Все книги в базе данных:");
+//        try (Connection connection = dataSource.getConnection()) {
+//            DatabaseMetaData metaData = connection.getMetaData();
+//
+//            System.out.println(">>> Таблицы в базе данных:");
+//            try (ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
+//                while (tables.next()) {
+//                    String schema = tables.getString("TABLE_SCHEM");
+//                    String tableName = tables.getString("TABLE_NAME");
+//                    System.out.printf("Схема: %s, Таблица: %s%n", schema, tableName);
+//                }
+//            }
+//        }
     }
 
 

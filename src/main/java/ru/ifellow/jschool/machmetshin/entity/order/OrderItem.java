@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "order")
 @Getter
 @Setter
+@ToString(exclude = "order")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

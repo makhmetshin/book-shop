@@ -13,6 +13,7 @@ import ru.ifellow.jschool.machmetshin.entity.order.Status;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.ShopBook;
 import ru.ifellow.jschool.machmetshin.entity.storage.WarehouseBook;
+import ru.ifellow.jschool.machmetshin.entity.user.User;
 
 
 import java.time.LocalDate;
@@ -33,13 +34,14 @@ public class ShopManagerService {
     private BookService bookService;
     private ShopService shopService;
     private OrderService orderService;
+    private UserService userService;
 
     public List<Shop> findAllShops() {
         return shopService.findAll();
     }
 
     @Transactional
-    public Bill sellBooks(Set<OrderItem> orderItems, Integer shopId, String customerFio ) {
+    public Bill sellBooks(Set<OrderItem> orderItems, Integer shopId, Integer customerId ) {
 
         Shop shop = shopService.findById(shopId).get();
 
@@ -53,9 +55,11 @@ public class ShopManagerService {
             shopBookService.removeBook(bookId, shopId, amount);
             summa += amount * bookPrice;
         }
+        User user = userService.findById(customerId).get();
+
         Order order = Order.builder()
                 .orderItems(orderItems)
-                .customerFio(customerFio)
+                .user(user)
                 .orderDate(LocalDate.now())
                 .status(Status.FINISHED)
                 .totalPrice(summa)
@@ -66,9 +70,7 @@ public class ShopManagerService {
         Bill bill = Bill.builder()
                 .order(order)
                 .shop(shop)
-                .customerFio(customerFio)
                 .date(LocalDate.now())
-                .summa(summa)
                 .build();
         billService.save(bill);
 

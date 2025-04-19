@@ -11,11 +11,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString(exclude = {"order"})
+@EqualsAndHashCode(exclude = {"order"})
 public class Bill {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
@@ -23,8 +26,7 @@ public class Bill {
     @JoinColumn(name = "shop_id", referencedColumnName = "id")
     private Shop shop;
 
-    private String customerFio;
     private LocalDate date;
-    private Integer summa;
+
 
 }

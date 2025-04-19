@@ -10,7 +10,9 @@ import lombok.*;
 @ToString
 @MappedSuperclass
 public abstract class Building {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String address;
     private String city;

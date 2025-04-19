@@ -20,9 +20,9 @@ public class OrderService {
     private OrderRepository orderRepository;
 
 
-    public Set<Order> findByCustomerFio(String customerFio) {
-        return orderRepository.findByCustomerFio(customerFio);
-    }
+//    public Set<Order> findByCustomerFio(String customerFio) {
+//        return orderRepository.findByCustomerFio(customerFio);
+//    }
 
     public void save(Order order) {
         orderRepository.save(order);

@@ -8,8 +8,8 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @NoArgsConstructor
 //@EqualsAndHashCode(callSuper=true)
 //@ToString(callSuper=true)
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = "shop")
+@ToString(exclude = "shop")
 @Table(
     uniqueConstraints = {
             @UniqueConstraint(columnNames = {"shop_id", "book_id"})
@@ -20,6 +20,7 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @Builder
 @AllArgsConstructor
 @Entity
+
 public class ShopBook implements StorageGood{
 
     @Id
