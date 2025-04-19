@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 @ToString(exclude = {"orderItems", "bill", "user"})
 @EqualsAndHashCode(exclude = {"orderItems", "bill", "user"})
-@Table(name = "Orders")
+@Table(name = "Orders") //наименования таблиц лучше с маленькой буквы
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,13 +11,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
 public class BookService {
 
-    private BookRepository bookRepository;
+    private BookRepository bookRepository; //private final
 
     public List<Book> findAll() {
         return bookRepository.findAll();

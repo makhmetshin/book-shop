@@ -20,8 +20,7 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @Builder
 @AllArgsConstructor
 @Entity
-
-public class ShopBook implements StorageGood{
+public class ShopBook implements StorageGood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

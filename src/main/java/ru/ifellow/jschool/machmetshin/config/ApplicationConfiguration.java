@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "ru.ifellow.jschool.machmetshin")
 public class ApplicationConfiguration {
 
+    //подобное закомментированое советую сразу удалять, иначе проект быстро мусором зарастёт)
 //    @Bean
 //    public BillDao billDao() {
 //        return new BillDao();

@@ -15,7 +15,7 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @Getter
 @Setter
 @Entity
-public class WarehouseBook implements StorageGood{
+public class WarehouseBook implements StorageGood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

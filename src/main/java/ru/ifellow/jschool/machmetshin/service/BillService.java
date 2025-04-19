@@ -7,14 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.BillRepository;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 
-
-@NoArgsConstructor
+@NoArgsConstructor //этот конструктор точно нужен?
 @AllArgsConstructor
 @Service
 public class BillService {
 
-    private BillRepository billRepository;
-
+    private BillRepository billRepository; //private final
 
     public void save(Bill bill) {
         billRepository.save(bill);

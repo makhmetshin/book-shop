@@ -21,7 +21,6 @@ public class WarehouseManagerService {
     private WarehouseBookService warehouseBookService;
     private BookService bookService;
 
-
     public Set<Book> findAllBooks(Integer warehouseId) {
         List<Book> books = bookService.findAll();
 

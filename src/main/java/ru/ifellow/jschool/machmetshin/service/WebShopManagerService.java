@@ -54,8 +54,10 @@ public class WebShopManagerService {
             }
         }
 
+        // А зачем второй раз проходимся по списку, можно и за один раз всё сделать?
+        // Для прерывания и отката транзакции можно попробовать исключение выбросить
         for( OrderItem orderItem : orderItems ) {
-            Integer bookId = orderItem.getId();
+            Integer bookId = orderItem.getId(); //аналогичная ошибка, айди позиции заказа - это же не айди книги?
             Integer amount = orderItem.getQuantity();
             warehouseBookService.removeBook(bookId, warehouseId, amount);
 
@@ -98,6 +100,7 @@ public class WebShopManagerService {
         }
 
     }
+
     @Transactional
     public void changeOrderStatus(Status status, Integer orderId) {
         if (status == Status.CANCELLED) {
@@ -120,7 +123,4 @@ public class WebShopManagerService {
 
         changeOrderStatus(Status.FINISHED, order.getId());
     }
-
-
-
 }

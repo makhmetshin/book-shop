@@ -25,6 +25,9 @@ public class WarehouseBookService {
     private WarehouseService warehouseService;
     private BookService bookService;
 
+    // Тут все комменты будут аналогичны комментам ShopBookService, так как методы идентичны.
+    // Кстати, это показатель того, что где-то произошло нарушение правила DRY (don't repeat yourself),
+    // стоит поразмышлять над унесением функционала в одно место.
 
     public List<WarehouseBook> findAll() {
         return warehouseBookRepository.findAll();

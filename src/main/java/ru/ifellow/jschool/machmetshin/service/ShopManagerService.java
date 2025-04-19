@@ -42,13 +42,15 @@ public class ShopManagerService {
 
     @Transactional
     public Bill sellBooks(Set<OrderItem> orderItems, Integer shopId, Integer customerId ) {
+        //в методе нет обработки кейсов, когда не нашлось магазина/книги/пользователя по айди. Можно хотя бы orElseThrow везде напихать
 
         Shop shop = shopService.findById(shopId).get();
 
+        //тут кажется тоже можно через StreamAPI, посмотри в сторону метода reduce
         Integer summa = 0;
         for( OrderItem orderItem : orderItems ) {
 
-            int bookId = orderItem.getId();
+            int bookId = orderItem.getId(); //Тут ошибочка? Айди позиции заказа - это не айди книги. И тут как раз явно видно преимущество UUID-ных айди перед числовыми айди)
             int amount = orderItem.getQuantity();
 
             int bookPrice = bookService.findById(bookId).get().getPrice();
@@ -77,6 +79,7 @@ public class ShopManagerService {
         return bill;
 
     }
+
     @Transactional
     public void distributeBooks( Integer bookId, List<Integer> shopIds, Integer warehouseId, Integer amount) {
 
@@ -87,7 +90,7 @@ public class ShopManagerService {
 
         int booksPerShop = amount / shopIds.size();
         int remainder = amount % shopIds.size();
-        Integer firstShopId = 0;
+        Integer firstShopId = 0; //а точно такой есть? Я вот внезапно засомневалась, что в БД автогенерируемые айди с 0 начинаются
 
 
         transportBooksFromWarehouse(bookId, warehouseId, shopIds.get(firstShopId), remainder);
@@ -96,6 +99,9 @@ public class ShopManagerService {
             transportBooksFromWarehouse(bookId, warehouseId, shopId, booksPerShop);
 
     }
+
+    //метод точно должен быть публичным?
+    // Transactional в текущем варианте не сработает, так как вызов внутри класса без проксирования
     @Transactional
     public void transportBooksFromWarehouse(Integer bookId, Integer warehouseId, Integer shopId, Integer amount) {
         warehouseBookService.removeBook(bookId, warehouseId, amount);
