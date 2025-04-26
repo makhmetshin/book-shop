@@ -1,10 +1,7 @@
 package ru.ifellow.jschool.machmetshin.entity.order;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 
 @Entity
@@ -12,6 +9,9 @@ import ru.ifellow.jschool.machmetshin.entity.good.Good;
 @Getter
 @Setter
 @ToString(exclude = "order")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

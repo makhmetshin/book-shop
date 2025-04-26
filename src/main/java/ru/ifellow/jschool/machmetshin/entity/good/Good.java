@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.aspectj.weaver.ast.Or;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,9 @@ public abstract class Good {
 
     @OneToMany(mappedBy = "good", orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "good", orphanRemoval = true)
+    private List<StorageGood> storageGoods = new ArrayList<>();
 
 
     private int price;

@@ -21,6 +21,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"orderItems", "bill", "user"})
 @Table(name = "Orders") //наименования таблиц лучше с маленькой буквы
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,7 +34,7 @@ public class Order {
     private LocalDate arrivalDate;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private OrderStatus orderStatus;
 
     private Integer totalPrice;
 

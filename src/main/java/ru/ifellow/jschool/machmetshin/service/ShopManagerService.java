@@ -9,16 +9,18 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
-import ru.ifellow.jschool.machmetshin.entity.order.Status;
+import ru.ifellow.jschool.machmetshin.entity.order.OrderStatus;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
-import ru.ifellow.jschool.machmetshin.entity.storage.ShopBook;
-import ru.ifellow.jschool.machmetshin.entity.storage.WarehouseBook;
+import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
+import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
 
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,46 +30,46 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class ShopManagerService {
 
-    private ShopBookService shopBookService;
-    private WarehouseBookService warehouseBookService;
+    private StorageGoodService storageGoodService;
+    private GoodService goodService;
     private BillService billService;
     private BookService bookService;
     private ShopService shopService;
     private OrderService orderService;
     private UserService userService;
+    private StorageTypeValidator storageTypeValidator;
+    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
 
-    public List<Shop> findAllShops() {
-        return shopService.findAll();
-    }
 
     @Transactional
-    public Bill sellBooks(Set<OrderItem> orderItems, Integer shopId, Integer customerId ) {
-        //в методе нет обработки кейсов, когда не нашлось магазина/книги/пользователя по айди. Можно хотя бы orElseThrow везде напихать
+    public Bill sellGoods(Set<OrderItem> orderItems, Integer shopId, Integer customerId ) {
+        Storage storage = storageTypeValidator.validate(shopId, StorageType.SHOP);
 
-        Shop shop = shopService.findById(shopId).get();
-
-        //тут кажется тоже можно через StreamAPI, посмотри в сторону метода reduce
         Integer summa = 0;
         for( OrderItem orderItem : orderItems ) {
 
-            int bookId = orderItem.getId(); //Тут ошибочка? Айди позиции заказа - это не айди книги. И тут как раз явно видно преимущество UUID-ных айди перед числовыми айди)
-            int amount = orderItem.getQuantity();
+            int goodId = orderItem.getId();
+            int quantity = orderItem.getQuantity();
 
-            int bookPrice = bookService.findById(bookId).get().getPrice();
-            shopBookService.removeBook(bookId, shopId, amount);
-            summa += amount * bookPrice;
+            int goodPrice = goodService.findById(goodId).get().getPrice();
+            storageGoodService.removeGood(goodId, shopId, quantity);
+            summa += quantity * goodPrice;
         }
-        User user = userService.findById(customerId).get();
+        User user = entityFoundByIdServiceValidator.validate(userService, customerId, User.class);
+
 
         Order order = Order.builder()
                 .orderItems(orderItems)
                 .user(user)
                 .orderDate(LocalDate.now())
-                .status(Status.FINISHED)
+                .orderStatus(OrderStatus.FINISHED)
                 .totalPrice(summa)
                 .build();
 
         orderService.save(order);
+
+
+        Shop shop = entityFoundByIdServiceValidator.validate(shopService, shopId, Shop.class);
 
         Bill bill = Bill.builder()
                 .order(order)
@@ -77,11 +79,14 @@ public class ShopManagerService {
         billService.save(bill);
 
         return bill;
-
     }
 
     @Transactional
     public void distributeBooks( Integer bookId, List<Integer> shopIds, Integer warehouseId, Integer amount) {
+        storageTypeValidator.validate(warehouseId, StorageType.WAREHOUSE);
+
+        for( Integer shopId : shopIds )
+            storageTypeValidator.validate(shopId, StorageType.SHOP);
 
         if (shopIds.isEmpty()) {
             System.out.println("shopIds is empty in distributeBooks()");
@@ -90,46 +95,43 @@ public class ShopManagerService {
 
         int booksPerShop = amount / shopIds.size();
         int remainder = amount % shopIds.size();
-        Integer firstShopId = 0; //а точно такой есть? Я вот внезапно засомневалась, что в БД автогенерируемые айди с 0 начинаются
+        Integer firstShopId = 0;
 
 
-        transportBooksFromWarehouse(bookId, warehouseId, shopIds.get(firstShopId), remainder);
+        transportGoodsFromWarehouse(bookId, warehouseId, shopIds.get(firstShopId), remainder + booksPerShop);
 
-        for (Integer shopId : shopIds)
-            transportBooksFromWarehouse(bookId, warehouseId, shopId, booksPerShop);
-
+        for (int i = 1; i < shopIds.size(); i++)
+            transportGoodsFromWarehouse(bookId, warehouseId, shopIds.get(i), booksPerShop);
     }
 
-    //метод точно должен быть публичным?
-    // Transactional в текущем варианте не сработает, так как вызов внутри класса без проксирования
     @Transactional
-    public void transportBooksFromWarehouse(Integer bookId, Integer warehouseId, Integer shopId, Integer amount) {
-        warehouseBookService.removeBook(bookId, warehouseId, amount);
-        shopBookService.addBook(bookId, shopId, amount);
+    public void transportGoodsFromWarehouse(Integer goodId, Integer warehouseId, Integer shopId, Integer amount)  {
+        storageTypeValidator.validate(warehouseId, StorageType.WAREHOUSE);
+        storageTypeValidator.validate(shopId, StorageType.SHOP);
+
+        storageGoodService.removeGood(goodId, warehouseId, amount);
+        storageGoodService.addGood(goodId, shopId, amount);
     }
 
-    public Set<Book> findBooksByGenreAndAuthor(String genre, Author author) {
+    public List<Book> findBooksByGenreAndAuthor(String genre, Author author) {
         return bookService.findBooksByGenreAndAuthor(genre, author);
     }
 
-    public Set<Book> findBooksByGenre(String genre) {
+    public List<Book> findBooksByGenre(String genre) {
         return bookService.findBooksByGenre(genre);
     }
 
-    public Set<Book> findBooksByAuthor(Author author) {
+    public List<Book> findBooksByAuthor(Author author) {
         return bookService.findBooksByAuthor(author);
     }
 
-    public Set<Book> findBooksByAuthorAndTitle(Author author, String title) {
+    public List<Book> findBooksByAuthorAndTitle(Author author, String title) {
         return bookService.findBooksByAuthorAndTitle(author, title);
     }
 
-    public Optional<ShopBook> findShopBookByIds(Integer bookId, Integer shopId) {
-        return shopBookService.findByShopIdAndBookId(shopId, bookId);
+    public Optional<StorageGood> findStorageGoodById(Integer goodId, Integer storageId) {
+        return storageGoodService.findByStorageIdAndGoodId(storageId, goodId);
     }
 
-    public Optional<WarehouseBook> findWarehouseBookByIds(Integer bookId, Integer warehouseId) {
-        return warehouseBookService.findByWarehouseIdAndBookId(warehouseId, bookId);
-    }
 
 }

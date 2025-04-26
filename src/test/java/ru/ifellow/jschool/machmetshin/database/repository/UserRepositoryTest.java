@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.ifellow.jschool.machmetshin.entity.storage.ShopBook;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
 
 @DataJpaTest

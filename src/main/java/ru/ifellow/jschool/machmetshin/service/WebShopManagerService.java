@@ -1,23 +1,24 @@
 package ru.ifellow.jschool.machmetshin.service;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
-import ru.ifellow.jschool.machmetshin.entity.order.Status;
+import ru.ifellow.jschool.machmetshin.entity.order.OrderStatus;
+import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
+import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
+import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class WebShopManagerService {
 
-    private WarehouseBookService warehouseBookService;
+    private StorageGoodService storageGoodService;
     private BookService bookService;
     private OrderService orderService;
     private WarehouseService warehouseService;
@@ -34,35 +35,30 @@ public class WebShopManagerService {
     private BillService billService;
     private UserService userService;
 
-//    public Set<Order> findOrderByFio(String customerFio) {
-//        return orderService.findByCustomerFio(customerFio);
-//    }
+    private StorageTypeValidator storageTypeValidator;
+    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
 
     @Transactional
     public Order createOrder(Integer userId, Integer warehouseId, Integer arrivalShopId, List<OrderItem> orderItems ) {
-
+        Storage arrivalShop = storageTypeValidator.validate(arrivalShopId, StorageType.SHOP);
         int totalPrice = 0;
         LocalDate today = LocalDate.now();
 
         for( OrderItem orderItem : orderItems ) {
-            Integer itemId = orderItem.getId();
+            Integer goodId = orderItem.getGood().getId();
             Integer amount = orderItem.getQuantity();
 
-            if (warehouseBookService.getAmountOfBook(itemId, warehouseId) < amount ) {
-                System.out.println("Недостаточно книг c id %d на складе с id %d".formatted(itemId, warehouseId));
-                return null;
-            }
+            if (storageGoodService.getAmountOfGood(goodId, warehouseId) < amount )
+                throw new IllegalStateException("not enough goods with id %d in the storage with id %d".formatted(goodId, warehouseId));
         }
 
-        // А зачем второй раз проходимся по списку, можно и за один раз всё сделать?
-        // Для прерывания и отката транзакции можно попробовать исключение выбросить
         for( OrderItem orderItem : orderItems ) {
-            Integer bookId = orderItem.getId(); //аналогичная ошибка, айди позиции заказа - это же не айди книги?
+            Good good = orderItem.getGood();
+            Integer goodId = good.getId();
             Integer amount = orderItem.getQuantity();
-            warehouseBookService.removeBook(bookId, warehouseId, amount);
+            storageGoodService.removeGood(goodId, warehouseId, amount);
 
-            Book book = bookService.findById(bookId).get();
-            totalPrice += book.getPrice() * amount;
+            totalPrice += good.getPrice() * amount;
         }
         User user = userService.findById(userId).get();
 
@@ -71,14 +67,10 @@ public class WebShopManagerService {
                 .orderItems(orderItems.stream().collect(Collectors.toSet()) )
                 .orderDate(today)
                 .arrivalDate(today.plusDays(5))
-                .status(Status.ASSEMBLING)
+                .orderStatus(OrderStatus.ASSEMBLING)
                 .totalPrice(totalPrice)
-                .departureWarehouse(warehouseService.findById(warehouseId).orElseThrow(
-                        () -> new EntityNotFoundException("Warehouse not found")
-                        ))
-                .arrivalShop(shopService.findById(arrivalShopId).orElseThrow(
-                        () -> new EntityNotFoundException("Shop not found")
-                        ))
+                .departureWarehouse(entityFoundByIdServiceValidator.validate(warehouseService, warehouseId, Warehouse.class))
+                .arrivalShop(entityFoundByIdServiceValidator.validate(shopService, arrivalShopId, Shop.class))
                 .build();
 
         orderService.save(order);
@@ -89,30 +81,31 @@ public class WebShopManagerService {
     @Transactional
     public void cancelOrder(Integer orderId) {
 
-        Order order = orderService.findById(orderId).get();
-        order.setStatus(Status.CANCELLED);
+        Order order = entityFoundByIdServiceValidator.validate(orderService, orderId ,Order.class);
+        order.setOrderStatus(OrderStatus.CANCELLED);
 
         Warehouse warehouse = order.getDepartureWarehouse();
+
         for(OrderItem orderItem : order.getOrderItems()) {
-            Integer bookId = orderItem.getGood().getId();
-            Integer amount = orderItem.getQuantity();
-            warehouseBookService.addBook(bookId, warehouse.getId(), amount);
+
+            Integer goodId = orderItem.getGood().getId();
+            Integer quantity = orderItem.getQuantity();
+            storageGoodService.addGood(goodId, warehouse.getId(), quantity);
         }
 
     }
-
     @Transactional
-    public void changeOrderStatus(Status status, Integer orderId) {
-        if (status == Status.CANCELLED) {
+    public void changeOrderStatus(OrderStatus orderStatus, Integer orderId) {
+        if (orderStatus == OrderStatus.CANCELLED) {
             cancelOrder(orderId);
             return;
         }
         Order order = orderService.findById(orderId).get();
-        order.setStatus(status);
+        order.setOrderStatus(orderStatus);
     }
 
     @Transactional
-    public void takeAwayOrder(Order order) {
+    public Bill takeAwayOrder(Order order) {
         Bill bill = Bill.builder()
                 .order(order)
                 .shop(order.getArrivalShop())
@@ -120,7 +113,11 @@ public class WebShopManagerService {
                 .build();
 
         billService.save(bill);
+        changeOrderStatus(OrderStatus.FINISHED, order.getId());
 
-        changeOrderStatus(Status.FINISHED, order.getId());
+        return bill;
     }
+
+
+
 }

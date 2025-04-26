@@ -1,6 +1,6 @@
 package ru.ifellow.jschool.machmetshin.entity.order;
 
-public enum Status {
+public enum OrderStatus {
 
     ASSEMBLING, TRANSIT, READY, FINISHED, CANCELLED;
 

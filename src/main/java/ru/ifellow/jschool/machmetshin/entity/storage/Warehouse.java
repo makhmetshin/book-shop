@@ -1,6 +1,7 @@
 package ru.ifellow.jschool.machmetshin.entity.storage;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
@@ -14,18 +15,16 @@ import java.util.List;
 @ToString(callSuper=true, exclude = {"warehouseBooks", "orders"})
 @NoArgsConstructor
 @Entity
-public class Warehouse extends Building implements Storage {
+@DiscriminatorValue("WAREHOUSE")
+public class Warehouse extends Storage  {
 
-
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<WarehouseBook> warehouseBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "departureWarehouse", orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
 
     public Warehouse(Integer id, String address, String city) {
-        super(id, address, city);
+        super(id, address, city, StorageType.WAREHOUSE);
     }
 
 }
