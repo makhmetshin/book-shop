@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper=true, exclude = "shopBooks")
+@EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true, exclude = {"orders", "bills"})
 @NoArgsConstructor
 @Entity

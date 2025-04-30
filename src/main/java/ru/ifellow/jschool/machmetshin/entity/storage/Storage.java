@@ -8,17 +8,23 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = "storageGoods")
+@ToString(exclude = "storageGoods")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "storage_type")
 @Entity
+@Table(name = "storage")
 public abstract class Storage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "address")
     private String address;
+
+    @Column(name = "city")
     private String city;
 
     @Column(name = "storage_type", insertable = false, updatable = false)

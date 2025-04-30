@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper=true, exclude = {"warehouseBooks", "orders"})
-@ToString(callSuper=true, exclude = {"warehouseBooks", "orders"})
+@EqualsAndHashCode(callSuper=true, exclude = {"orders"})
+@ToString(callSuper=true, exclude = {"orders"})
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("WAREHOUSE")

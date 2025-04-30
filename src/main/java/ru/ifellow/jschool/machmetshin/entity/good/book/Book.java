@@ -13,13 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode(callSuper = true, exclude = {"shopBooks", "warehouseBooks"})
-@ToString(callSuper = true, exclude = {"shopBooks", "warehouseBooks"})
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @PrimaryKeyJoinColumn(name="id")
+@Table(name = "book")
 public class Book extends Good {
 
+    @Column(name = "isbn")
     private String ISBN;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "pages_amount")
     private Integer pagesAmount;
 
     @ManyToOne
@@ -30,7 +36,10 @@ public class Book extends Good {
     @JoinColumn(name = "publisher_id", referencedColumnName = "id")
     private Publisher publisher;
 
+    @Column(name = "genre")
     private String genre;
+
+    @Column(name = "published_date")
     private LocalDate publishedDate;
 
 }

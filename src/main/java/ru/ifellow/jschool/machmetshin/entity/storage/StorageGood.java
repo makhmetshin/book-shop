@@ -11,7 +11,8 @@ import ru.ifellow.jschool.machmetshin.entity.good.Good;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"good_id", "storage_id"})
-        }
+        },
+        name = "storage_good"
 )
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class StorageGood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne
@@ -32,5 +34,6 @@ public class StorageGood {
     @JoinColumn(name = "storage_id", referencedColumnName = "id")
     private Storage storage;
 
+    @Column(name = "quantity")
     private Integer quantity;
 }

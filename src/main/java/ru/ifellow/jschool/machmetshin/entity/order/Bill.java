@@ -13,9 +13,12 @@ import java.time.LocalDate;
 @Entity
 @ToString(exclude = {"order"})
 @EqualsAndHashCode(exclude = {"order"})
+@Table(name = "bill")
 public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     //CascadeType.ALL - при удалении платежа (Bill) удалится и заказ (Order)? Кажется, это не совсем логически правильно.
@@ -28,6 +31,7 @@ public class Bill {
     @JoinColumn(name = "shop_id", referencedColumnName = "id")
     private Shop shop;
 
+    @Column(name = "date")
     private LocalDate date;
 
 

@@ -24,18 +24,24 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @Column(name = "order_date")
     private LocalDate orderDate;
+
+    @Column(name = "arrival_date")
     private LocalDate arrivalDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
     private OrderStatus orderStatus;
 
+    @Column(name = "total_price")
     private Integer totalPrice;
 
     @ManyToOne

@@ -70,7 +70,6 @@ INSERT INTO BOOK (id, ISBN, title, author_id, publisher_id, genre, published_dat
     (9, '978-1-2345-0009', 'You Are Your Brain', 3, 3, 'Psychology', '2021-11-11'),
     (10, '978-1-2345-0010', 'Urban Romance', 3, 3, 'Contemporary', '2023-04-04');
 
--- Shops (storage_id 1-10), goods (good_id 1–10)
 INSERT INTO storage_good (storage_id, good_id, quantity) VALUES
     (1, 1, 1000), (1, 2, 1000), (1, 3, 1000), (1, 4, 1000), (1, 5, 1000),
     (1, 6, 1000), (1, 7, 1000), (1, 8, 1000), (1, 9, 1000), (1, 10, 1000),
