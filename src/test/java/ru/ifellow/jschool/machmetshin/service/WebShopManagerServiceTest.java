@@ -17,7 +17,8 @@ import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
-import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.service.manager.WebShopManagerService;
+import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
 
 import java.util.*;
@@ -43,7 +44,7 @@ public class WebShopManagerServiceTest {
     @Mock
     private StorageTypeValidator storageTypeValidator;
     @Mock
-    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
+    private EntityExistsValidator entityExistsValidator;
 
     @Spy
     @InjectMocks
@@ -108,7 +109,7 @@ public class WebShopManagerServiceTest {
                 .departureWarehouse(warehouse)
                 .build();
 
-        Mockito.doReturn(order).when(entityFoundByIdServiceValidator)
+        Mockito.doReturn(order).when(entityExistsValidator)
                 .validate(Mockito.any(Findable.class),
                         Mockito.eq(1),
                         Mockito.eq(Order.class));
@@ -130,17 +131,17 @@ public class WebShopManagerServiceTest {
     }
 
     @Test
-    public void takeAwayOrderTest() {
+    public void takeawayOrderTest() {
         Shop shop = new Shop();
 
         Order order = Order.builder().id(1).arrivalShop(shop).build();
         Mockito.doNothing().when(spyWebShopManagerService)
                 .changeOrderStatus(Mockito.any(OrderStatus.class), Mockito.anyInt());
 
-        spyWebShopManagerService.takeAwayOrder(order);
+        spyWebShopManagerService.takeawayOrder(order);
         Mockito.verify(spyWebShopManagerService).changeOrderStatus(OrderStatus.FINISHED, 1);
 
-        Assertions.assertThat(spyWebShopManagerService.takeAwayOrder(order).getOrder().getId())
+        Assertions.assertThat(spyWebShopManagerService.takeawayOrder(order).getOrder().getId())
                 .isEqualTo(1);
     }
 

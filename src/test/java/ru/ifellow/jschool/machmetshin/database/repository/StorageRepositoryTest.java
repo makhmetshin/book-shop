@@ -7,9 +7,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.config.ApplicationConfiguration;
-import ru.ifellow.jschool.machmetshin.config.DataInitializer;
-import ru.ifellow.jschool.machmetshin.entity.good.Good;
-import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
+import ru.ifellow.jschool.machmetshin.config.jpa.DataInitializer;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
 

@@ -1,32 +1,30 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
-import ru.ifellow.jschool.machmetshin.database.repository.UserRepository;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
-import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
-import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
+@Transactional(readOnly = true)
 public class StorageGoodService implements Findable<Integer, StorageGood> {
 
-    private StorageGoodRepository storageGoodRepository;
-    private GoodService goodService;
-    private StorageService storageService;
-    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
+    private final StorageGoodRepository storageGoodRepository;
+    private final GoodService goodService;
+    private final StorageService storageService;
+    private final EntityExistsValidator entityExistsValidator;
 
     @Override
     public List<StorageGood> findAll() {
@@ -38,6 +36,7 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
         return storageGoodRepository.findById(id);
     }
 
+    @Transactional
     public void removeGood(Integer goodId, Integer storageId, int amount) {
 
 
@@ -54,52 +53,52 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
         }
     }
 
+    @Transactional
     public void addGood(Integer goodId, Integer storageId, int amount) {
-        StorageGood storageGood;
-        Optional<StorageGood> optionalStorageGood = storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId);
-
-        if (optionalStorageGood.isPresent()) {
-            storageGood = optionalStorageGood.get();
-            storageGood.setQuantity(storageGood.getQuantity() + amount);
-        }
-        else
-            storageGood = StorageGood.builder()
-                    .storage(entityFoundByIdServiceValidator.validate(storageService, storageId, Storage.class)
-//                            storageService.findById(storageId).orElseThrow(() -> new EntityNotFoundException("There is no such shop with id %d".formatted(storageId)))
-                    )
-                    .good(entityFoundByIdServiceValidator.validate(goodService, goodId, Good.class)
-//                            goodService.findById(goodId).orElseThrow(() -> new EntityNotFoundException("There is no such book with id %d".formatted(storageId)))
-                    )
-                    .quantity(amount)
-                    .build();
+        StorageGood storageGood = storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId)
+                .map(sg -> {
+                    sg.setQuantity(sg.getQuantity() + amount);
+                    return sg;
+                })
+                // вот тут важно именно orElseGet, а не orElse!
+                .orElseGet(() -> StorageGood.builder()
+                        .storage(storageService.findById(storageId)
+                                .orElseThrow(() -> new EntityNotFoundException("There is no such storage with id %d".formatted(storageId)))
+                        )
+                        .good(goodService.findById(goodId)
+                                .orElseThrow(() -> new EntityNotFoundException("There is no such good with id %d".formatted(goodId)))
+                        )
+                        .quantity(amount)
+                        .build());
 
         storageGoodRepository.save(storageGood);
     }
 
+    @Transactional
     public void addGoods(List<Good> goods, Integer storageId) {
-        Map<Integer, Integer> goodCountMap = new HashMap<>();
-
-        for (Good good : goods)
-            goodCountMap.put(good.getId(), goodCountMap.getOrDefault(good.getId(), 0) + 1);
-
-        for (Map.Entry<Integer, Integer> entry : goodCountMap.entrySet()) {
-            Integer goodId = entry.getKey();
-            Integer amount = entry.getValue();
-            addGood(goodId, storageId, amount);
-        }
+        goods.stream()
+                .collect(Collectors.groupingBy(Good::getId, Collectors.summingInt(g -> 1)))
+                .forEach((goodId, amount) -> addGood(goodId, storageId, amount));
     }
 
-    public Integer getAmountOfGood(Integer goodId, Integer storageId) {
-        Optional<StorageGood> optionalStorageGood = storageGoodRepository
-                .findByStorageIdAndGoodId(goodId, storageId);
+    public Integer getAmountOfGood(Integer goodId, Integer storageId, StorageType storageType) {
 
-        if (optionalStorageGood.isPresent()) return  optionalStorageGood.get().getQuantity();
-        else throw new EntityNotFoundException(
-                "There is no such shop with id %d or such book with id $d in the shop".formatted(storageId, goodId));
+        return storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId)
+                .filter(sg -> sg.getStorage().getStorageType().equals(storageType))
+                .map(StorageGood::getQuantity)
+                .orElseThrow(() -> new EntityNotFoundException(("There is no such storage with id %d or such good " +
+                        "with id $d in the storage or storage type is wrong").formatted(storageId, goodId)));
+
     }
 
     public Optional<StorageGood> findByStorageIdAndGoodId(Integer storageId, Integer goodId) {
         return storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId);
+    }
+
+    public List<StorageGoodDto> findGoodIdsByStorageId(Integer storageId) {
+        return storageGoodRepository.findByStorageId(storageId).stream()
+                .map(sg -> new StorageGoodDto(sg.getGood().getId(), sg.getStorage().getId(), sg.getQuantity()))
+                .collect(Collectors.toList());
     }
 
 

@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,7 +14,7 @@ import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
-import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class StorageGoodServiceTest {
     @Mock
     private StorageGoodRepository storageGoodRepository;
     @Mock
-    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
+    private EntityExistsValidator entityExistsValidator;
     @Mock
     private StorageService storageService;
     @Mock

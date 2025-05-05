@@ -1,25 +1,25 @@
-package ru.ifellow.jschool.machmetshin.service;
+package ru.ifellow.jschool.machmetshin.service.manager;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
+import ru.ifellow.jschool.machmetshin.service.GoodService;
+import ru.ifellow.jschool.machmetshin.service.StorageGoodService;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class StorageManagerService {
 
-    private StorageGoodService storageGoodService;
-    private GoodService goodService ;
+    private final StorageGoodService storageGoodService;
+    private final GoodService goodService ;
 
     public List<StorageGood> findStorageGoodsByStorageType(StorageType storageType) {
 

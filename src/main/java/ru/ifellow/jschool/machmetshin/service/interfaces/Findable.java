@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Findable <K,V> {
-    Optional<V> findById(K id);
+
+    Optional<V>  findById(K id);
 
     List<V> findAll();
 }

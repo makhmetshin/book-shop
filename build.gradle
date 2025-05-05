@@ -1,9 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
     id("org.springframework.boot") version "3.4.4"
     id("io.spring.dependency-management") version "1.1.7"
-}
 
+}
+application {
+    mainClass = 'ru.ifellow.jschool.machmetshin.ApplicationRunner'
+}
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
@@ -22,6 +26,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation group: 'org.springframework', name: 'spring-core'
     implementation group: 'org.springframework', name: 'spring-context'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'//
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'//
+    runtimeOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'org.springframework:spring-webmvc:6.0.0'//
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.20'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.20'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core'

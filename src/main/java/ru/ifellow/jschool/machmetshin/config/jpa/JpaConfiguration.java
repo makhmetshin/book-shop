@@ -1,4 +1,4 @@
-package ru.ifellow.jschool.machmetshin.config;
+package ru.ifellow.jschool.machmetshin.config.jpa;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "ru.ifellow.jschool.machmetshin.database.repository")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class JpaConfiguration {
     @Bean
     public DataSource dataSource() {

@@ -2,6 +2,7 @@ package ru.ifellow.jschool.machmetshin.entity.order;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Entity
 @ToString(exclude = {"orderItems", "bill", "user"})
 @EqualsAndHashCode(exclude = {"orderItems", "bill", "user"})
-@Table(name = "Orders") //наименования таблиц лучше с маленькой буквы
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -36,6 +37,9 @@ public class Order {
 
     @Column(name = "arrival_date")
     private LocalDate arrivalDate;
+
+    @Column(name = "web")
+    private Boolean web;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
@@ -56,6 +60,7 @@ public class Order {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "order", orphanRemoval = true)
+    @Nullable
     private Bill bill;
 }

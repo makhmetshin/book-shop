@@ -1,4 +1,4 @@
-package ru.ifellow.jschool.machmetshin.config;
+package ru.ifellow.jschool.machmetshin.config.jpa;
 
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;

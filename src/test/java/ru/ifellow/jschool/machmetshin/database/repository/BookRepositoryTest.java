@@ -1,26 +1,14 @@
 package ru.ifellow.jschool.machmetshin.database.repository;
 
-import lombok.AllArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.config.ApplicationConfiguration;
-import ru.ifellow.jschool.machmetshin.config.DataInitializer;
-import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
+import ru.ifellow.jschool.machmetshin.config.jpa.DataInitializer;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
-
-import java.util.List;
-import java.util.Set;
 
 
 @SpringJUnitConfig(classes = {ApplicationConfiguration.class, DataInitializer.class})

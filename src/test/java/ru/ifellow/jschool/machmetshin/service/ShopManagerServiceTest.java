@@ -1,6 +1,5 @@
 package ru.ifellow.jschool.machmetshin.service;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,9 +8,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.ifellow.jschool.machmetshin.database.repository.OrderRepository;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
@@ -21,7 +17,8 @@ import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
 import ru.ifellow.jschool.machmetshin.entity.storage.*;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
-import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdServiceValidator;
+import ru.ifellow.jschool.machmetshin.service.manager.ShopManagerService;
+import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
 
 import java.util.*;
@@ -47,7 +44,7 @@ public class ShopManagerServiceTest {
     @Mock
     private StorageTypeValidator storageTypeValidator;
     @Mock
-    private EntityFoundByIdServiceValidator entityFoundByIdServiceValidator;
+    private EntityExistsValidator entityExistsValidator;
 
     @Spy
     @InjectMocks
@@ -67,14 +64,14 @@ public class ShopManagerServiceTest {
 
         Mockito.doReturn(shop).when(storageTypeValidator).validate(1, StorageType.SHOP);
 
-        Mockito.doReturn(user).when(entityFoundByIdServiceValidator).validate(
+        Mockito.doReturn(user).when(entityExistsValidator).validate(
                         Mockito.any(Findable.class),
                         Mockito.any(Integer.class),
                         Mockito.eq(User.class));
 
         Mockito.doNothing().when(orderService).save(Mockito.any(Order.class));
 
-        Mockito.doReturn(shop).when(entityFoundByIdServiceValidator).validate(
+        Mockito.doReturn(shop).when(entityExistsValidator).validate(
                 Mockito.any(shopService.getClass()),
                 Mockito.any(Integer.class),
                 Mockito.eq(Shop.class));
@@ -88,7 +85,7 @@ public class ShopManagerServiceTest {
 
     }
     @Test
-    public void distributeBooksTest() {
+    public void distributeGoodsTest() {
         Shop shop = new Shop();
         Warehouse warehouse = new Warehouse();
 
@@ -107,7 +104,7 @@ public class ShopManagerServiceTest {
         ids.add(1);
         ids.add(2);
 
-        spyShopManagerService.distributeBooks(1, ids, 1, 13);
+        spyShopManagerService.distributeGood(1, ids, 1, 13);
 
         Mockito.verify(spyShopManagerService)
                 .transportGoodsFromWarehouse(1, 1, 1, 7);

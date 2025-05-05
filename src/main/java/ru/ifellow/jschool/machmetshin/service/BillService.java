@@ -2,6 +2,7 @@ package ru.ifellow.jschool.machmetshin.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.BillRepository;
@@ -12,13 +13,14 @@ import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 import java.util.List;
 import java.util.Optional;
 
-@NoArgsConstructor //этот конструктор точно нужен?
 @AllArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class BillService implements Findable<Integer, Bill> {
 
-    private BillRepository billRepository; //private final
+    private final BillRepository billRepository;
 
+    @Transactional
     public void save(Bill bill) {
         billRepository.save(bill);
     }

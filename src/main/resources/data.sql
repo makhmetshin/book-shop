@@ -58,17 +58,17 @@ INSERT INTO PUBLISHER (name, address, city) VALUES
     ('Vintage Books', '120 Riverside Blvd', 'New York');
 
 
-INSERT INTO BOOK (id, ISBN, title, author_id, publisher_id, genre, published_date) VALUES
-    (1, '978-1-2345-0001', 'Cosmos 3000', 1, 1, 'Science Fiction', '2020-01-01'),
-    (2, '978-1-2345-0002', 'Love Forever', 1, 1, 'Romance', '2019-05-12'),
-    (3, '978-1-2345-0003', 'The Baker Street Mystery', 1, 1, 'Detective', '2021-10-20'),
-    (4, '978-1-2345-0004', 'The Physics of the Future', 2, 1, 'Science', '2018-03-14'),
-    (5, '978-1-2345-0005', 'Dragon’s Shadow', 2, 2, 'Fantasy', '2020-12-12'),
-    (6, '978-1-2345-0006', '1812. War and Peace', 2, 2, 'History', '1869-01-01'),
-    (7, '978-1-2345-0007', 'Pirate Odyssey', 2, 2, 'Adventure', '2017-07-07'),
-    (8, '978-1-2345-0008', 'Laughter and Sin', 2, 3, 'Humor', '2022-02-02'),
-    (9, '978-1-2345-0009', 'You Are Your Brain', 3, 3, 'Psychology', '2021-11-11'),
-    (10, '978-1-2345-0010', 'Urban Romance', 3, 3, 'Contemporary', '2023-04-04');
+INSERT INTO BOOK (id, ISBN, title, author_id, publisher_id, genre, published_date, pages_amount) VALUES
+    (1, '978-1-2345-0001', 'Cosmos 3000', 1, 1, 'Science Fiction', '2020-01-01', 400),
+    (2, '978-1-2345-0002', 'Love Forever', 1, 1, 'Romance', '2019-05-12', 400),
+    (3, '978-1-2345-0003', 'The Baker Street Mystery', 1, 1, 'Detective', '2021-10-20', 400),
+    (4, '978-1-2345-0004', 'The Physics of the Future', 2, 1, 'Science', '2018-03-14', 400),
+    (5, '978-1-2345-0005', 'Dragon’s Shadow', 2, 2, 'Fantasy', '2020-12-12', 400),
+    (6, '978-1-2345-0006', '1812. War and Peace', 2, 2, 'History', '1869-01-01', 400),
+    (7, '978-1-2345-0007', 'Pirate Odyssey', 2, 2, 'Adventure', '2017-07-07', 400),
+    (8, '978-1-2345-0008', 'Laughter and Sin', 2, 3, 'Humor', '2022-02-02', 400),
+    (9, '978-1-2345-0009', 'You Are Your Brain', 3, 3, 'Psychology', '2021-11-11', 400),
+    (10, '978-1-2345-0010', 'Urban Romance', 3, 3, 'Contemporary', '2023-04-04', 500);
 
 -- Shops (storage_id 1-10), goods (good_id 1–10)
 INSERT INTO storage_good (storage_id, good_id, quantity) VALUES
@@ -134,17 +134,17 @@ INSERT INTO storage_good (storage_id, good_id, quantity) VALUES
     (20, 1, 1000), (20, 2, 1000), (20, 3, 1000), (20, 4, 1000), (20, 5, 1000),
     (20, 6, 1000), (20, 7, 1000), (20, 8, 1000), (20, 9, 1000), (20, 10, 1000);
 
-INSERT INTO ORDERS (user_id, order_date, arrival_date, order_status, total_price, departure_warehouse_id, arrival_shop_id) VALUES
-    (1, '2024-03-01', '2024-03-05', 'ASSEMBLING', 1050, 11, 1),
-    (2, '2024-03-02', '2024-03-06', 'TRANSIT', 600, 11, 1),
-    (3, '2024-03-03', '2024-03-07', 'READY', 450, 11, 1),
-    (4, '2024-03-04', '2024-03-08', 'FINISHED', 1200, 11, 1),
-    (5, '2024-03-05', '2024-03-09', 'READY', 700, 11, 1),
-    (6, '2024-03-06', '2024-03-10', 'ASSEMBLING', 630, 11, 1),
-    (7, '2024-03-07', '2024-03-11', 'TRANSIT', 480, 11, 1),
-    (8, '2024-03-08', '2024-03-12', 'READY', 950, 11, 1),
-    (9, '2024-03-09', '2024-03-13', 'FINISHED', 610, 11, 1),
-    (10, '2024-03-10', '2024-03-14', 'ASSEMBLING', 560, 11, 1);
+INSERT INTO ORDERS (user_id, order_date, arrival_date, order_status, total_price, departure_warehouse_id, arrival_shop_id, web) VALUES
+    (1, '2024-03-01', '2024-03-05', 'ASSEMBLING', 1050, 11, 1, true),
+    (2, '2024-03-02', '2024-03-06', 'TRANSIT', 600, 11, 1, true),
+    (3, '2024-03-03', '2024-03-07', 'READY', 450, 11, 1, true),
+    (4, '2024-03-04', '2024-03-08', 'FINISHED', 1200, 11, 1, false),
+    (5, '2024-03-05', '2024-03-09', 'READY', 700, 11, 1, true),
+    (6, '2024-03-06', '2024-03-10', 'ASSEMBLING', 630, 11, 1, true),
+    (7, '2024-03-07', '2024-03-11', 'TRANSIT', 480, 11, 1, true),
+    (8, '2024-03-08', '2024-03-12', 'READY', 950, 11, 1, true),
+    (9, '2024-03-09', '2024-03-13', 'FINISHED', 610, 11, 1, false),
+    (10, '2024-03-10', '2024-03-14', 'ASSEMBLING', 560, 11, 1, true);
 
 INSERT INTO ORDER_ITEM (order_id, good_id, quantity, price_at_purchase) VALUES
     (1, 1, 1, 500),
@@ -160,14 +160,14 @@ INSERT INTO ORDER_ITEM (order_id, good_id, quantity, price_at_purchase) VALUES
     (9, 10, 1, 610),
     (10, 9, 1, 560);
 
-INSERT INTO BILL (order_id, shop_id, date) VALUES
-    (1, 1, '2024-03-06'),
-    (2, 1, '2024-03-07'),
-    (3, 1, '2024-03-08'),
-    (4, 1, '2024-03-09'),
-    (5, 1, '2024-03-10'),
-    (6, 1, '2024-03-11'),
-    (7, 1, '2024-03-12'),
-    (8, 1, '2024-03-13'),
-    (9, 1, '2024-03-14'),
-    (10, 1,'2024-03-15');
+INSERT INTO BILL (order_id, shop_id, date, returned) VALUES
+    (1, 1, '2024-03-06', false),
+    (2, 1, '2024-03-07', false),
+    (3, 1, '2024-03-08', false),
+    (4, 1, '2024-03-09', false),
+    (5, 1, '2024-03-10', false),
+    (6, 1, '2024-03-11', false),
+    (7, 1, '2024-03-12', false),
+    (8, 1, '2024-03-13', false),
+    (9, 1, '2024-03-14', false),
+    (10, 1,'2024-03-15', false);

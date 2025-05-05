@@ -21,9 +21,7 @@ public class Bill {
     @Column(name = "id")
     private Integer id;
 
-    //CascadeType.ALL - при удалении платежа (Bill) удалится и заказ (Order)? Кажется, это не совсем логически правильно.
-    // Поправь меня, если я неправа)
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
@@ -33,6 +31,9 @@ public class Bill {
 
     @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "returned")
+    private Boolean returned;
 
 
 }

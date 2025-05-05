@@ -2,23 +2,20 @@ package ru.ifellow.jschool.machmetshin.validator;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 
-
 @AllArgsConstructor
 @Component
-public class EntityFoundByIdServiceValidator {
+public class EntityFoundByIdRepositoryValidator {
 
-    public <K, V> V validate(Findable<K, V> findableById, K entityId, Class<V> clazz)  {
+    public <K, V> V validate(JpaRepository<V, K> jpaRepository, K entityId, Class<V> clazz)  {
 
-        Object rawEntity = findableById.findById(entityId)
+        Object rawEntity = jpaRepository.findById(entityId)
                 .orElseThrow(() -> new EntityNotFoundException("There is no such entity which should be found with" +
-                        findableById.getClass().getSimpleName() + "and by id " + entityId));
+                        jpaRepository.getClass().getSimpleName() + "and by id " + entityId));
 
         return clazz.cast(rawEntity);
     }
-
-
 }
