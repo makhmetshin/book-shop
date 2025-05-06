@@ -10,6 +10,7 @@ import ru.ifellow.jschool.machmetshin.dto.good.book.PublisherDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.DistributeGoodDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.FindBooksDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
@@ -145,6 +146,8 @@ public class ShopManagerService extends AbstractShopManager{
                         .build())
                 .collect(Collectors.toList());
     }
+
+
 
 
 

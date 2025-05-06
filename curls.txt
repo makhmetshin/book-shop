@@ -1,0 +1,140 @@
+
+USER findById
+curl -Uri "http://localhost:8080/api/v1/users?id=1" -Method GET
+
+USER accountInformation
+curl -Uri "http://localhost:8080/api/v1/users/account?id=1" -Method GET
+
+USER update account details
+curl -Method PATCH "http://localhost:8080/api/v1/users/account?id=1" `
+     -Headers @{"Content-Type"="application/json"} `
+     -Body '{
+         "username": "newUsername",
+         "name": "newName",
+         "surname": "newSurname",
+         "lastName": "last",
+         "email": "example.example@example.com"
+     }'
+
+USER register
+curl -Uri "http://localhost:8080/api/v1/users/register" `
+     -Method POST `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "username": "sampleUser",
+         "password": "samplePassword",
+         "name": "SampleName",
+         "surname": "SampleSurname",
+         "lastName": "SampleLastName",
+         "email": "sample@example.com"
+     }'
+USER delete
+curl -Uri "http://localhost:8080/api/v1/users/delete?id=1" -Method DELETE 
+
+
+WEB_SHOP create order
+curl -Uri "http://localhost:8080/api/v1/web_shop/create_order" `
+     -Method POST `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "userId": 1,
+         "warehouseId": 11,
+         "arrivalShopId": 1,
+         "orderItemDtosWithGoodId": [
+             {
+                 "goodId": 1,
+                 "quantity": 2,
+                 "priceAtPurchase": 450
+             },
+             {
+                 "goodId": 2,
+                 "quantity": 5,
+                 "priceAtPurchase": 40
+             }
+         ]
+     }'
+
+WEB_SHOP cancel order
+curl -Uri "http://localhost:8080/api/v1/web_shop/cancel_order?orderId=1" -Method PATCH
+
+WEB_SHOP change order status
+curl -Uri "http://localhost:8080/api/v1/web_shop/change_order_status?orderId=1&status=TRANSIT" -Method PATCH
+
+WEB_SHOP takeaway order
+curl -Uri "http://localhost:8080/api/v1/web_shop/takeaway_order?orderId=1" -Method PATCH
+
+WEB_SHOP return goods
+curl -Uri "http://localhost:8080/api/v1/web_shop/return?billId=1"-Method PATCH
+
+WEB_SHOP findbooks
+curl -Uri "http://localhost:8080/api/v1/web_shop/books" `
+     -Method POST `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "genre": "Detective",
+         "title": null,
+         "authorId": 1
+     }'
+
+USUAL_SHOP sell goods
+curl -Uri "http://localhost:8080/api/v1/shops/sell" `
+     -Method POST `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "userId": 1,
+         "receiveStorageId": 1,
+         "orderItemDtosWithGoodId": [
+             {
+                 "goodId": 1,
+                 "quantity": 2,
+                 "priceAtPurchase": 450
+             },
+             {
+                 "goodId": 2,
+                 "quantity": 5,
+                 "priceAtPurchase": 40
+             }
+         ]
+     }'
+
+
+
+USUAL_SHOP distribute goods
+curl -Uri "http://localhost:8080/api/v1/shops/distribute" `
+     -Method PATCH `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "goodId": 1,
+         "shopIds": [1, 2, 3, 4],
+	 "warehouseId": 11,
+	 "amount": 100
+     }'
+
+USUAL_SHOP return goods
+curl -Uri "http://localhost:8080/api/v1/shops/return?billId=1"-Method PATCH
+
+USUAL_SHOP findBooksInShop
+curl -Uri "http://localhost:8080/api/v1/shops/books?shopId=1" `
+     -Method POST `
+     -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "genre": "Detective",
+         "title": null,
+         "authorId": 1
+     }'
+
+USUAL_SHOP findById
+curl -Uri "http://localhost:8080/api/v1/shops/1" -Method GET
+
+USUAL_SHOP findAll
+curl -Uri "http://localhost:8080/api/v1/shops" -Method GET
+
+STORAGE_GOOD get amount of goods
+curl -Uri "http://localhost:8080/api/v1/warehouses" `
+    -Method POST `
+    -Headers @{ "Content-Type" = "application/json" } `
+     -Body '{
+         "goodId": "1",
+         "storageId": 11,
+         "storageType": "WAREHOUSE"
+     }'

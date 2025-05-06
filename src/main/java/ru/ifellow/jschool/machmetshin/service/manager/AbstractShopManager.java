@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.order.OrderItemDtoWithGoodId;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
@@ -114,9 +115,17 @@ public abstract class AbstractShopManager {
 
     }
 
-    @Transactional
+
     public Optional<StorageGood> findStorageGoodById(Integer goodId, Integer storageId) {
         return storageGoodService.findByStorageIdAndGoodId(storageId, goodId);
+    }
+
+    public List<StorageDto> findAllShops() {
+        return shopService.findAllDto();
+    }
+
+    public StorageDto findShopById(Integer shopId) {
+        return shopService.findByIdDto(shopId);
     }
 
 }

@@ -8,12 +8,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
+import ru.ifellow.jschool.machmetshin.dto.order.OrderItemDtoWithGoodId;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
+import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderStatus;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
@@ -45,6 +50,8 @@ public class WebShopManagerServiceTest {
     private StorageTypeValidator storageTypeValidator;
     @Mock
     private EntityExistsValidator entityExistsValidator;
+    @Mock
+    private GoodService goodService;
 
     @Spy
     @InjectMocks
@@ -53,31 +60,33 @@ public class WebShopManagerServiceTest {
     @Test
     public void createOrderTest() {
 
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            Good good = Book.builder().build();
-            good.setId(i);
-            good.setPrice(i * 100);
+        List<OrderItemDtoWithGoodId> orderItemDtoWithGoodIds = new ArrayList<>();
+        orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(1, 10, 100));
+        orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(2, 20, 200));
 
-            OrderItem orderItem =
-                    OrderItem.builder()
-                    .id(i)
-                    .good(good)
-                    .priceAtPurchase(i * 100)
-                    .quantity(i * 10)
-                    .build();
-
-            orderItems.add(orderItem);
-        }
-
-        Mockito.doReturn(0).when(storageGoodService).getAmountOfGood(Mockito.anyInt(), Mockito.anyInt());
+        Mockito.doReturn(0).when(storageGoodService).getAmountOfGood(Mockito.anyInt(),
+                Mockito.anyInt(), Mockito.any(StorageType.class));
         assertThrows(IllegalStateException.class, () -> {
-            spyWebShopManagerService.createOrder(1, 1, 1, orderItems);
+            spyWebShopManagerService.createOrder(
+                    new CreateWebOrderDto(1,1, orderItemDtoWithGoodIds,11));
         });
 
+
         Mockito.doReturn(Optional.of(new User())).when(userService).findById(Mockito.anyInt());
-        Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(Mockito.anyInt(), Mockito.anyInt());
-        Assertions.assertThat(spyWebShopManagerService.createOrder(1, 1, 1, orderItems)
+        Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(Mockito.anyInt(),
+                Mockito.anyInt(), Mockito.any(StorageType.class));
+
+        Mockito.doReturn(new Shop()).when(entityExistsValidator)
+                .validate(Mockito.any(), Mockito.anyInt(), Mockito.eq(Shop.class));
+
+        Mockito.doReturn(new Warehouse()).when(entityExistsValidator)
+                .validate(Mockito.any(), Mockito.anyInt(), Mockito.eq(Warehouse.class));
+
+        Mockito.doReturn(new Book()).when(entityExistsValidator)
+                .validate(Mockito.any(), Mockito.anyInt(), Mockito.eq(Good.class));
+
+        Assertions.assertThat(spyWebShopManagerService.createOrder(
+                new CreateWebOrderDto(1,1, orderItemDtoWithGoodIds,1))
                 .getOrderItems()).hasSize(2);
     }
 
@@ -110,7 +119,7 @@ public class WebShopManagerServiceTest {
                 .build();
 
         Mockito.doReturn(order).when(entityExistsValidator)
-                .validate(Mockito.any(Findable.class),
+                .validate(Mockito.any(),
                         Mockito.eq(1),
                         Mockito.eq(Order.class));
 
@@ -121,7 +130,7 @@ public class WebShopManagerServiceTest {
         Mockito.verify(storageGoodService).addGood(
                 Mockito.eq(1), Mockito.anyInt(), Mockito.eq(10));
     }
-
+//
     @Test
     public void changeOrderStatusTest() {
         Order order = Order.builder().id(1).build();
@@ -129,19 +138,80 @@ public class WebShopManagerServiceTest {
         spyWebShopManagerService.changeOrderStatus(OrderStatus.TRANSIT, 1);
         Assertions.assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.TRANSIT);
     }
-
+//
     @Test
     public void takeawayOrderTest() {
         Shop shop = new Shop();
 
         Order order = Order.builder().id(1).arrivalShop(shop).build();
+        Mockito.doReturn(order).when(entityExistsValidator).validate(Mockito.any(),
+                Mockito.anyInt(), Mockito.eq(Order.class));
+
         Mockito.doNothing().when(spyWebShopManagerService)
                 .changeOrderStatus(Mockito.any(OrderStatus.class), Mockito.anyInt());
 
-        spyWebShopManagerService.takeawayOrder(order);
+        spyWebShopManagerService.takeawayOrder(1);
         Mockito.verify(spyWebShopManagerService).changeOrderStatus(OrderStatus.FINISHED, 1);
 
-        Assertions.assertThat(spyWebShopManagerService.takeawayOrder(order).getOrder().getId())
+        Assertions.assertThat(spyWebShopManagerService.takeawayOrder(1).getOrder().getId())
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void findBooksByGenreTest() {
+        Book book = new Book();
+        book.setGenre("genre");
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+
+        Mockito.doReturn(books).when(bookService)
+                .findBooksByGenre("genre");
+
+        Assertions.assertThat(spyWebShopManagerService.findBooksByGenre("genre").getFirst().getGenre())
+                .isEqualTo("genre");
+    }
+
+    @Test
+    public void findBooksByAuthorTest() {
+        Book book = new Book();
+        book.setGenre("genre");
+        Author author = new Author();
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+
+        Mockito.doReturn(books).when(bookService)
+                .findBooksByAuthor(author);
+
+        Assertions.assertThat(spyWebShopManagerService.findBooksByAuthor(author).getFirst().getGenre())
+                .isEqualTo("genre");
+    }
+
+    @Test
+    public void findBooksByAuthorAndTitleTest() {
+        Book book = new Book();
+        book.setGenre("genre");
+        Author author = new Author();
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+
+        Mockito.doReturn(books).when(bookService)
+                .findBooksByAuthorAndTitle(author, "title");
+
+        Assertions.assertThat(
+                        spyWebShopManagerService.findBooksByAuthorAndTitle(author, "title").getFirst().getGenre())
+                .isEqualTo("genre");
+    }
+
+    @Test
+    public void findStorageGoodByIdTest() {
+        StorageGood storageGood = new StorageGood();
+        storageGood.setId(1);
+
+        Mockito.doReturn(Optional.of(storageGood)).when(storageGoodService)
+                .findByStorageIdAndGoodId(1,1);
+
+        Assertions.assertThat(
+                        spyWebShopManagerService.findStorageGoodById(1,1).get().getId())
                 .isEqualTo(1);
     }
 

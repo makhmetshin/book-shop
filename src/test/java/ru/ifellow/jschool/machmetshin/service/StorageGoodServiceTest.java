@@ -13,7 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
+import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
+import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
 import java.util.ArrayList;
@@ -100,6 +102,7 @@ public class StorageGoodServiceTest {
             goods.add(book);
         }
         goods.get(1).setId(0);
+
         spyStorageGoodService.addGoods(goods, 1);
 
         Mockito.verify(spyStorageGoodService).addGood(0, 1, 2);
@@ -111,16 +114,19 @@ public class StorageGoodServiceTest {
     public void getAmountOfGoodTest() {
 
         assertThrows(EntityNotFoundException.class,
-                () -> spyStorageGoodService.getAmountOfGood(1,1));
+                () -> spyStorageGoodService.getAmountOfGood(1,1, StorageType.SHOP));
 
         StorageGood storageGood = new StorageGood();
         storageGood.setId(1);
         storageGood.setQuantity(120);
+        Shop shop = new Shop();
+        shop.setStorageType(StorageType.SHOP);
+        storageGood.setStorage(shop);
 
         Mockito.doReturn(Optional.of(storageGood)).when(storageGoodRepository)
                 .findByStorageIdAndGoodId(1,1);
 
-        Assertions.assertThat(spyStorageGoodService.getAmountOfGood(1,1))
+        Assertions.assertThat(spyStorageGoodService.getAmountOfGood(1,1, StorageType.SHOP))
                 .isEqualTo(120);
 
     }

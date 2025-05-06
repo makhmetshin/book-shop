@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
+import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
@@ -62,12 +63,8 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
                 })
                 // вот тут важно именно orElseGet, а не orElse!
                 .orElseGet(() -> StorageGood.builder()
-                        .storage(storageService.findById(storageId)
-                                .orElseThrow(() -> new EntityNotFoundException("There is no such storage with id %d".formatted(storageId)))
-                        )
-                        .good(goodService.findById(goodId)
-                                .orElseThrow(() -> new EntityNotFoundException("There is no such good with id %d".formatted(goodId)))
-                        )
+                        .storage(entityExistsValidator.validate(storageService.findById(storageId), storageId, Storage.class))
+                        .good(entityExistsValidator.validate(goodService.findById(goodId), goodId, Good.class))
                         .quantity(amount)
                         .build());
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.config.ApplicationConfiguration;
 import ru.ifellow.jschool.machmetshin.config.jpa.DataInitializer;
@@ -14,6 +15,7 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 @SpringJUnitConfig(classes = {ApplicationConfiguration.class, DataInitializer.class})
 @Transactional
 @Rollback
+@WebAppConfiguration
 public class BookRepositoryTest {
 
     @Autowired

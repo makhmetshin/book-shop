@@ -9,9 +9,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuperBuilder
-@AllArgsConstructor
+
 @NoArgsConstructor
 public class CreateWebOrderDto extends CreateOrderDto {
 
     Integer warehouseId;
+
+    public CreateWebOrderDto(Integer userId, Integer receiveStorageId, List<OrderItemDtoWithGoodId> orderItemDtosWithGoodId, Integer warehouseId) {
+        super(userId, receiveStorageId, orderItemDtosWithGoodId);
+        this.warehouseId = warehouseId;
+    }
 }

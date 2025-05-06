@@ -9,7 +9,7 @@ import ru.ifellow.jschool.machmetshin.config.jpa.JpaConfiguration;
 import ru.ifellow.jschool.machmetshin.config.web.WebConfiguration;
 
 @Configuration
-@Import({JpaConfiguration.class, WebConfiguration.class})
+@Import({JpaConfiguration.class})//, WebConfiguration.class
 @ComponentScan(basePackages = "ru.ifellow.jschool.machmetshin")
 public class ApplicationConfiguration {
 

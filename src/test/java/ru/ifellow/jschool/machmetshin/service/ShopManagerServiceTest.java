@@ -8,22 +8,25 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.ifellow.jschool.machmetshin.dto.order.CreateOrderDto;
+import ru.ifellow.jschool.machmetshin.dto.order.OrderItemDtoWithGoodId;
+import ru.ifellow.jschool.machmetshin.dto.servicesDto.DistributeGoodDto;
+import ru.ifellow.jschool.machmetshin.dto.servicesDto.FindBooksDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
+import ru.ifellow.jschool.machmetshin.entity.good.book.Publisher;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
-import ru.ifellow.jschool.machmetshin.entity.order.OrderItem;
 import ru.ifellow.jschool.machmetshin.entity.storage.*;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 import ru.ifellow.jschool.machmetshin.service.manager.ShopManagerService;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
 
 import java.util.*;
 
-//@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class ShopManagerServiceTest {
 
@@ -45,6 +48,8 @@ public class ShopManagerServiceTest {
     private StorageTypeValidator storageTypeValidator;
     @Mock
     private EntityExistsValidator entityExistsValidator;
+    @Mock
+    private WarehouseService warehouseService;
 
     @Spy
     @InjectMocks
@@ -62,25 +67,36 @@ public class ShopManagerServiceTest {
         Bill bill = new Bill();
         good.setPrice(100);
 
-        Mockito.doReturn(shop).when(storageTypeValidator).validate(1, StorageType.SHOP);
-
         Mockito.doReturn(user).when(entityExistsValidator).validate(
-                        Mockito.any(Findable.class),
+                        Mockito.any(Optional.class),
                         Mockito.any(Integer.class),
                         Mockito.eq(User.class));
+
+        Mockito.doReturn(good).when(entityExistsValidator).validate(
+                Mockito.any(Optional.class),
+                Mockito.any(Integer.class),
+                Mockito.eq(Good.class));
 
         Mockito.doNothing().when(orderService).save(Mockito.any(Order.class));
 
         Mockito.doReturn(shop).when(entityExistsValidator).validate(
-                Mockito.any(shopService.getClass()),
+                Mockito.any(),
                 Mockito.any(Integer.class),
                 Mockito.eq(Shop.class));
 
         Mockito.doNothing().when(billService).save(Mockito.any(Bill.class));
 
-        Set<OrderItem> orderItems = new HashSet<>();
+        Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(
+                Mockito.eq(1), Mockito.eq(15), Mockito.any());
+        Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(
+                Mockito.eq(2), Mockito.eq(15), Mockito.any());
 
-        Assertions.assertThat(shopManagerService.sellGoods(orderItems, 1, 1)
+        List<OrderItemDtoWithGoodId> orderItemDtoWithGoodIds = new ArrayList<>();
+        orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(1, 10, 100));
+        orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(2, 20, 200));
+        CreateOrderDto createOrderDto = new CreateOrderDto(1, 15, orderItemDtoWithGoodIds);
+
+        Assertions.assertThat(shopManagerService.sellGoods(createOrderDto)
                         .getShop().getId()).isEqualTo(15);
 
     }
@@ -89,118 +105,48 @@ public class ShopManagerServiceTest {
         Shop shop = new Shop();
         Warehouse warehouse = new Warehouse();
 
-        Mockito.doReturn(shop).when(storageTypeValidator)
-                .validate(Mockito.any(Integer.class), Mockito.eq(StorageType.SHOP));
+        List<Integer> shopIds = new ArrayList<>();
+        shopIds.add(1);
+        shopIds.add(2);
 
-        Mockito.doReturn(warehouse).when(storageTypeValidator)
-                .validate(Mockito.any(Integer.class), Mockito.eq(StorageType.WAREHOUSE));
+        DistributeGoodDto distributeGoodDto = new DistributeGoodDto(1, shopIds, 1, 13);
 
-        Mockito.doNothing().when(spyShopManagerService)
-                .transportGoodsFromWarehouse(
-                        Mockito.anyInt(), Mockito.anyInt(),
-                        Mockito.anyInt(), Mockito.anyInt());
-
-        List<Integer> ids = new ArrayList<>();
-        ids.add(1);
-        ids.add(2);
-
-        spyShopManagerService.distributeGood(1, ids, 1, 13);
-
-        Mockito.verify(spyShopManagerService)
-                .transportGoodsFromWarehouse(1, 1, 1, 7);
-        Mockito.verify(spyShopManagerService)
-                .transportGoodsFromWarehouse(1, 1, 2, 6);
-    }
-
-    @Test
-    public void transportGoodsFromWarehouseTest() {
-
-        spyShopManagerService.transportGoodsFromWarehouse(1,2,1, 100);
-
-        Mockito.verify(storageTypeValidator)
-                .validate(2,StorageType.WAREHOUSE);
-        Mockito.verify(storageTypeValidator)
-                .validate(1,StorageType.SHOP);
+        Assertions.assertThatCode(() -> spyShopManagerService.distributeGood(distributeGoodDto))
+                .doesNotThrowAnyException();
 
         Mockito.verify(storageGoodService)
-                .removeGood(1, 2, 100);
+                .removeGood(1, 1, 7);
         Mockito.verify(storageGoodService)
-                .addGood(1, 1, 100);
+                .addGood(1, 2, 6);
     }
 
-    @Test
-    public void findBooksByGenreAndAuthorTest() {
-        Book book = new Book();
-        book.setGenre("genre");
-        Author author = new Author();
-        List<Book> books = new ArrayList<>();
-        books.add(book);
 
-        Mockito.doReturn(books).when(bookService)
-                .findBooksByGenreAndAuthor("genre", author);
+    @Test
+    public void findBooksInShopByGenreAndAuthorTest() {
+        Book book = new Book();
+        StorageGoodDto storageGoodDto = new StorageGoodDto(1, 1, 10);
+        book.setGenre("genre");
+        Author author = Author.builder().id(1).build();
+        Publisher publisher = Publisher.builder().id(1).build();
+        book.setAuthor(author);
+        book.setPublisher(publisher);
+
+        List<Book> books = new ArrayList<>();
+        List<StorageGoodDto> storageGoodDtos = new ArrayList<>();
+        books.add(book);
+        storageGoodDtos.add(storageGoodDto);
+
+        Mockito.doReturn(book).when(entityExistsValidator).validate(
+                Mockito.any(), Mockito.any(Integer.class), Mockito.eq(Book.class));
+        Mockito.doReturn(storageGoodDtos).when(storageGoodService).findGoodIdsByStorageId(1);
+
+        FindBooksDto findBooksDto = new FindBooksDto("genre", null, 1);
 
         Assertions.assertThat(
-                shopManagerService.findBooksByGenreAndAuthor("genre", author).getFirst().getGenre())
+                shopManagerService.findBooksInShopByGenreAndAuthor(1, findBooksDto).getFirst().getGenre())
                 .isEqualTo("genre");
     }
 
-    @Test
-    public void findBooksByGenreTest() {
-        Book book = new Book();
-        book.setGenre("genre");
-        List<Book> books = new ArrayList<>();
-        books.add(book);
-
-        Mockito.doReturn(books).when(bookService)
-                .findBooksByGenre("genre");
-
-        Assertions.assertThat(shopManagerService.findBooksByGenre("genre").getFirst().getGenre())
-                .isEqualTo("genre");
-    }
-
-    @Test
-    public void findBooksByAuthorTest() {
-        Book book = new Book();
-        book.setGenre("genre");
-        Author author = new Author();
-        List<Book> books = new ArrayList<>();
-        books.add(book);
-
-        Mockito.doReturn(books).when(bookService)
-                .findBooksByAuthor(author);
-
-        Assertions.assertThat(shopManagerService.findBooksByAuthor(author).getFirst().getGenre())
-                .isEqualTo("genre");
-    }
-
-    @Test
-    public void findBooksByAuthorAndTitleTest() {
-        Book book = new Book();
-        book.setGenre("genre");
-        Author author = new Author();
-        List<Book> books = new ArrayList<>();
-        books.add(book);
-
-        Mockito.doReturn(books).when(bookService)
-                .findBooksByAuthorAndTitle(author, "title");
-
-        Assertions.assertThat(
-                shopManagerService.findBooksByAuthorAndTitle(author, "title").getFirst().getGenre())
-                .isEqualTo("genre");
-    }
-
-    @Test
-    public void findStorageGoodByIdTest() {
-        StorageGood storageGood = new StorageGood();
-        storageGood.setId(1);
-
-        Mockito.doReturn(Optional.of(storageGood)).when(storageGoodService)
-                .findByStorageIdAndGoodId(1,1);
-
-        Assertions.assertThat(
-                        shopManagerService.findStorageGoodById(1,1).get().getId())
-                .isEqualTo(1);
-    }
 
 
 }

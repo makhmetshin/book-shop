@@ -32,6 +32,7 @@ public class WebShopManagerRestController {
     @PatchMapping(path = "cancel_order")
     public String cancelOrder(@RequestParam Integer orderId) {
         webShopManagerService.cancelOrder(orderId);
+        System.out.println(orderService.findById(orderId));
         return "order with id %d canceled".formatted(orderId);
     }
 
@@ -50,10 +51,11 @@ public class WebShopManagerRestController {
     }
 
     @PatchMapping(path = "/return")
-    public String sellGoods(@RequestParam Integer billId) {
+    public String returnGoods(@RequestParam Integer billId) {
         webShopManagerService.returnGoods(billId);
         System.out.println(storageGoodService.findByStorageIdAndGoodId(1, 1));
         System.out.println(storageGoodService.findByStorageIdAndGoodId(1, 3));
+        // в этом магазине возрастет кол-во товара с айди 1 и 3
         return "Goods have been returned";
     }
 

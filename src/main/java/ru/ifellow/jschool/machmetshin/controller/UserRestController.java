@@ -17,7 +17,7 @@ public class UserRestController {
 
     private final UserService userService;
 
-    @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserOrdersDto findById(@RequestParam int id ) {
         UserOrdersDto userOrdersDto =  userService.findByUserIdWithOrders(id);
         return userOrdersDto;
@@ -30,18 +30,23 @@ public class UserRestController {
     @PatchMapping(path = "/account", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String accountUpdateAccountDetails(@RequestParam int id,  @RequestBody UserAccountDto updateDto) {
         userService.updateAccountDetails(id, updateDto);
+        // чтобы посмотреть что информация юзера была изменена
+        // можно воспользоваться get запросом на юзера с его id
         return "Account updated";
     }
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String registerUser(@RequestBody CreateUserDto createUserDto) {
         userService.save(createUserDto);
+        // чтобы посмотреть что юзер был добавлен можно воспользоваться get запросом на
+        // юзера с id = 11, так как до этого было 10
         return "User created";
     }
 
     @DeleteMapping(path = "/delete")
-    public String registerUser(@RequestParam int id) {
+    public String deleteUser(@RequestParam int id) {
         userService.delete(id);
+        // чтобы посмотреть что юзер удален можно воспользоваться get запросом на юзера с его id
         return "User deleted";
     }
 
