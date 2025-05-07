@@ -22,17 +22,17 @@ INSERT INTO STORAGE (address, city, storage_type) VALUES
     ('Warehouse #9, Zelenaya St, 9', 'Ufa', 'WAREHOUSE'),
     ('Warehouse #10, Berezovaya St, 10', 'Perm', 'WAREHOUSE');
 
-INSERT INTO USERS (username, password, name, surname, last_name, email) VALUES
-    ('alexey', 'password1', 'Alexey', 'Smirnov', 'Ivanovich', 'alexey.smirnov@example.com'),
-    ('elena', 'password2', 'Elena', 'Ivanova', 'Petrovna', 'elena.ivanova@example.com'),
-    ('petr', 'password3', 'Petr', 'Vlasov', 'Nikolaevich', 'petr.vlasov@example.com'),
-    ('nikita', 'password4', 'Nikita', 'Morozov', 'Sergeevich', 'nikita.morozov@example.com'),
-    ('anastasia', 'password5', 'Anastasia', 'Belova', 'Vladimirovna', 'anastasia.belova@example.com'),
-    ('igor', 'password6', 'Igor', 'Lebedev', 'Alexandrovich', 'igor.lebedev@example.com'),
-    ('svetlana', 'password7', 'Svetlana', 'Pavlova', 'Igorevna', 'svetlana.pavlova@example.com'),
-    ('dmitry', 'password8', 'Dmitry', 'Orlov', 'Viktorovich', 'dmitry.orlov@example.com'),
-    ('yulia', 'password9', 'Yulia', 'Fomina', 'Igorevna', 'yulia.fomina@example.com'),
-    ('maxim', 'password10', 'Maxim', 'Kotov', 'Sergeevich', 'maxim.kotov@example.com');
+INSERT INTO USERS (username, password, name, surname, last_name, email, user_role) VALUES
+    ('alexey', 'password1', 'Alexey', 'Smirnov', 'Ivanovich', 'alexey.smirnov@example.com', 'USER'),
+    ('elena', 'password2', 'Elena', 'Ivanova', 'Petrovna', 'elena.ivanova@example.com', 'USER'),
+    ('petr', 'password3', 'Petr', 'Vlasov', 'Nikolaevich', 'petr.vlasov@example.com', 'USER'),
+    ('nikita', 'password4', 'Nikita', 'Morozov', 'Sergeevich', 'nikita.morozov@example.com', 'USER'),
+    ('anastasia', 'password5', 'Anastasia', 'Belova', 'Vladimirovna', 'anastasia.belova@example.com', 'USER'),
+    ('igor', 'password6', 'Igor', 'Lebedev', 'Alexandrovich', 'igor.lebedev@example.com', 'USER'),
+    ('svetlana', 'password7', 'Svetlana', 'Pavlova', 'Igorevna', 'svetlana.pavlova@example.com', 'USER'),
+    ('dmitry', 'password8', 'Dmitry', 'Orlov', 'Viktorovich', 'dmitry.orlov@example.com', 'USER'),
+    ('yulia', 'password9', 'Yulia', 'Fomina', 'Igorevna', 'yulia.fomina@example.com', 'USER'),
+    ('maxim', 'password10', 'Maxim', 'Kotov', 'Sergeevich', 'maxim.kotov@example.com', 'MANAGER');
 
 INSERT INTO GOOD (good_type, price, description) VALUES
     ('BOOK', 500, 'Science fiction about space'),

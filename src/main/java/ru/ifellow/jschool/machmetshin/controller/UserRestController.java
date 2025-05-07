@@ -1,8 +1,12 @@
 package ru.ifellow.jschool.machmetshin.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.ifellow.jschool.machmetshin.dto.user.CreateUserDto;
 import ru.ifellow.jschool.machmetshin.dto.user.UserAccountDto;
@@ -48,6 +52,17 @@ public class UserRestController {
         userService.delete(id);
         // чтобы посмотреть что юзер удален можно воспользоваться get запросом на юзера с его id
         return "User deleted";
+    }
+
+    @GetMapping("/test")
+    public String test(Authentication authentication) {
+
+        System.out.println(authentication);
+        SecurityContext context = SecurityContextHolder.getContext();
+        System.out.println("AUTH ARGUMENT: " + authentication);
+        System.out.println("SECURITY CONTEXT AUTH: " + context.getAuthentication());
+
+        return "Current user: " + (authentication != null ? authentication.getName() : "none");
     }
 
 

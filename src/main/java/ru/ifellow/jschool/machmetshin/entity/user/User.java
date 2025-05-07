@@ -42,6 +42,10 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name="user_role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Order> orders = new ArrayList<>();

@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @EntityGraph(attributePaths = {"orders", "orders.arrivalShop"})
     Optional<User> findById(Integer id);
+
+    Optional<User> findByUsername(String username);
 }
