@@ -138,3 +138,11 @@ curl -Uri "http://localhost:8080/api/v1/warehouses" `
          "storageId": 11,
          "storageType": "WAREHOUSE"
      }'
+
+logout
+curl -Uri "http://localhost:8080/logout"-Method POST
+
+curl `
+  -Uri "http://localhost:8080/logout" `
+  -Method POST `
+  -Headers @{ "Cookie" = "JSESSIONID=6A15016F5BCD60D0AE6288A5EE684312" }

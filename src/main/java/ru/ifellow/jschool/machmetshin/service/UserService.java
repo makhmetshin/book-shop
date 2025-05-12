@@ -4,6 +4,7 @@ package ru.ifellow.jschool.machmetshin.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.UserRepository;
@@ -27,6 +28,8 @@ public class UserService implements Findable<Integer, User> {
     private final UserRepository userRepository;
     @Autowired
     private final EntityFoundByIdRepositoryValidator entityFoundByIdRepositoryValidator;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     public UserOrdersDto findByUserIdWithOrders(Integer id) {
         User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
@@ -87,7 +90,7 @@ public class UserService implements Findable<Integer, User> {
     public void save(CreateUserDto createUserDto) {
         User user = User.builder()
                 .username(createUserDto.getUsername())
-                .password(createUserDto.getPassword())
+                .password(passwordEncoder.encode(createUserDto.getPassword()))
                 .name(createUserDto.getName())
                 .surname(createUserDto.getSurname())
                 .lastName(createUserDto.getLastName())

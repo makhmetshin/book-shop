@@ -36,23 +36,6 @@ public class ApplicationRunner {
 
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(ApplicationConfiguration.class);
-
-        Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8080);
-        tomcat.setBaseDir(".");
-
-        tomcat.getConnector(); // неочевидный шаг но без него не заработает
-        // https://stackoverflow.com/questions/56668892/embedded-tomcat-java-application-is-running-but-server-cannot-be-reached/61394907
-
-        var base = new File(".").getAbsolutePath();
-        var ctx = tomcat.addContext("", base);
-
-        DispatcherServlet dispatcherServlet = new DispatcherServlet(context);
-        Tomcat.addServlet(ctx, "dispatcher", dispatcherServlet).setLoadOnStartup(1);
-        ctx.addServletMappingDecoded("/", "dispatcher");
-
-        tomcat.start();
-        System.out.println("Server started");
-        tomcat.getServer().await();
     }
+
 }

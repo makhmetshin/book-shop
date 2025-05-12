@@ -57,8 +57,8 @@ public class UserRestController {
     @GetMapping("/test")
     public String test(Authentication authentication) {
 
-        System.out.println(authentication);
         SecurityContext context = SecurityContextHolder.getContext();
+        System.out.println(context);
         System.out.println("AUTH ARGUMENT: " + authentication);
         System.out.println("SECURITY CONTEXT AUTH: " + context.getAuthentication());
 
