@@ -32,7 +32,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/logout").permitAll()
-                        .anyRequest().permitAll()//hasRole("MANAGER")
+                                .anyRequest().authenticated()
+//                        .anyRequest().permitAll()//hasRole("MANAGER")
                 )
                 .httpBasic(Customizer.withDefaults())
                 .logout(logout -> logout
