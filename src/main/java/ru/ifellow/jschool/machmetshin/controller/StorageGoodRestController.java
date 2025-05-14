@@ -7,7 +7,7 @@ import ru.ifellow.jschool.machmetshin.service.StorageGoodService;
 import ru.ifellow.jschool.machmetshin.service.WarehouseService;
 
 @RestController
-@RequestMapping("api/v1/warehouses")
+@RequestMapping("api/v1/storages")
 @RequiredArgsConstructor
 public class StorageGoodRestController {
 

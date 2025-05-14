@@ -1,13 +1,20 @@
+"Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" - для менеджера maxim (maxim:password10)
+"Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5" - для админа yulia (yulia:password9)
+"Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA==" - для обычного пользователя dmitry (dmitry:password8)
 
 USER findById
-curl -Uri "http://localhost:8080/api/v1/users?id=1" -Method GET
+curl -Uri "http://localhost:8080/api/v1/users?id=3" -Method GET `
+     -Headers @{ "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA=="}
 
 USER accountInformation
-curl -Uri "http://localhost:8080/api/v1/users/account?id=1" -Method GET
+curl -Uri "http://localhost:8080/api/v1/users/account?id=8" -Method GET `
+     -Headers @{ "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA=="}
 
-USER update account details
-curl -Method PATCH "http://localhost:8080/api/v1/users/account?id=1" `
-     -Headers @{"Content-Type"="application/json"} `
+USER update account details - обычный пользователь обновляет свои данные
+curl -Method PATCH "http://localhost:8080/api/v1/users/account?id=8" `
+     -Headers @{ "Content-Type" = "application/json";
+                 "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA=="
+     } `
      -Body '{
          "username": "newUsername",
          "name": "newName",
@@ -19,27 +26,34 @@ curl -Method PATCH "http://localhost:8080/api/v1/users/account?id=1" `
 USER register
 curl -Uri "http://localhost:8080/api/v1/users/register" `
      -Method POST `
-     -Headers @{ "Content-Type" = "application/json" } `
+     -Headers @{ "Content-Type" = "application/json";
+                 "Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5"
+     } `
      -Body '{
          "username": "sampleUser",
          "password": "samplePassword",
          "name": "SampleName",
          "surname": "SampleSurname",
          "lastName": "SampleLastName",
-         "email": "sample@example.com"
+         "email": "sample@example.com",
+         "role": "USER"
      }'
-USER delete
-curl -Uri "http://localhost:8080/api/v1/users/delete?id=1" -Method DELETE 
+
+USER delete - админ удаляет юзера с айди 3
+curl -Uri "http://localhost:8080/api/v1/users/delete?id=3" -Method DELETE `
+     -Headers @{"Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5"}
 
 
 WEB_SHOP create order
 curl -Uri "http://localhost:8080/api/v1/web_shop/create_order" `
      -Method POST `
-     -Headers @{ "Content-Type" = "application/json" } `
+     -Headers @{ "Content-Type" = "application/json" ;
+                 "Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5"
+     } `
      -Body '{
-         "userId": 1,
+         "userId": 8,
          "warehouseId": 11,
-         "arrivalShopId": 1,
+         "receiveStorageId": 1,
          "orderItemDtosWithGoodId": [
              {
                  "goodId": 1,
@@ -54,17 +68,22 @@ curl -Uri "http://localhost:8080/api/v1/web_shop/create_order" `
          ]
      }'
 
-WEB_SHOP cancel order
-curl -Uri "http://localhost:8080/api/v1/web_shop/cancel_order?orderId=1" -Method PATCH
+WEB_SHOP cancel order обычный пользователь отменяет свой заказ
+curl -Uri "http://localhost:8080/api/v1/web_shop/cancel_order?orderId=1" -Method PATCH `
+     -Headers @{"Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5"}
 
 WEB_SHOP change order status
-curl -Uri "http://localhost:8080/api/v1/web_shop/change_order_status?orderId=1&status=TRANSIT" -Method PATCH
+curl -Uri "http://localhost:8080/api/v1/web_shop/change_order_status?orderId=1&status=TRANSIT" -Method PATCH `
+     -Headers @{ "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" }
 
 WEB_SHOP takeaway order
-curl -Uri "http://localhost:8080/api/v1/web_shop/takeaway_order?orderId=1" -Method PATCH
+// ВАЖНО именно забрать заказ с айди = 1,5,8,9 так как только они в состоянии готовности иначе будет выброшено исключение
+curl -Uri "http://localhost:8080/api/v1/web_shop/takeaway_order?orderId=1" -Method PATCH `
+     -Headers @{ "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" }
 
 WEB_SHOP return goods
-curl -Uri "http://localhost:8080/api/v1/web_shop/return?billId=1"-Method PATCH
+curl -Uri "http://localhost:8080/api/v1/web_shop/return?billId=2"-Method PATCH `
+     -Headers @{ "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" }
 
 WEB_SHOP findbooks
 curl -Uri "http://localhost:8080/api/v1/web_shop/books" `
@@ -79,7 +98,9 @@ curl -Uri "http://localhost:8080/api/v1/web_shop/books" `
 USUAL_SHOP sell goods
 curl -Uri "http://localhost:8080/api/v1/shops/sell" `
      -Method POST `
-     -Headers @{ "Content-Type" = "application/json" } `
+     -Headers @{ "Content-Type" = "application/json";
+                 "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA=="
+     } `
      -Body '{
          "userId": 1,
          "receiveStorageId": 1,
@@ -102,7 +123,9 @@ curl -Uri "http://localhost:8080/api/v1/shops/sell" `
 USUAL_SHOP distribute goods
 curl -Uri "http://localhost:8080/api/v1/shops/distribute" `
      -Method PATCH `
-     -Headers @{ "Content-Type" = "application/json" } `
+     -Headers @{ "Content-Type" = "application/json";
+                 "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA=="
+     } `
      -Body '{
          "goodId": 1,
          "shopIds": [1, 2, 3, 4],
@@ -111,7 +134,8 @@ curl -Uri "http://localhost:8080/api/v1/shops/distribute" `
      }'
 
 USUAL_SHOP return goods
-curl -Uri "http://localhost:8080/api/v1/shops/return?billId=1"-Method PATCH
+curl -Uri "http://localhost:8080/api/v1/shops/return?billId=1"-Method PATCH `
+     -Headers @{ "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" }
 
 USUAL_SHOP findBooksInShop
 curl -Uri "http://localhost:8080/api/v1/shops/books?shopId=1" `
@@ -130,19 +154,14 @@ USUAL_SHOP findAll
 curl -Uri "http://localhost:8080/api/v1/shops" -Method GET
 
 STORAGE_GOOD get amount of goods
-curl -Uri "http://localhost:8080/api/v1/warehouses" `
+curl -Uri "http://localhost:8080/api/v1/storages" `
     -Method POST `
-    -Headers @{ "Content-Type" = "application/json" } `
+     -Headers @{ "Content-Type" = "application/json";
+                 "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA=="
+     } `
      -Body '{
          "goodId": "1",
          "storageId": 11,
          "storageType": "WAREHOUSE"
      }'
 
-logout
-curl -Uri "http://localhost:8080/logout"-Method POST
-
-curl `
-  -Uri "http://localhost:8080/logout" `
-  -Method POST `
-  -Headers @{ "Cookie" = "JSESSIONID=6A15016F5BCD60D0AE6288A5EE684312" }

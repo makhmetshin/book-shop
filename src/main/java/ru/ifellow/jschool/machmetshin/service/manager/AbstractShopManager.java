@@ -105,6 +105,8 @@ public abstract class AbstractShopManager {
     @Transactional
     public void returnGoods(Integer billId) {
         Bill bill = entityExistsValidator.validate(billService.findById(billId), billId, Bill.class);
+        if (bill.getReturned() == true)
+            throw new IllegalStateException("Order with this bill is already returned");
         Shop shop = bill.getShop();
         Order order = bill.getOrder();
         order.setOrderStatus(OrderStatus.CANCELLED);

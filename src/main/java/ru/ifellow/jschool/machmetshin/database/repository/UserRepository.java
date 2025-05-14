@@ -9,7 +9,7 @@ import ru.ifellow.jschool.machmetshin.entity.user.User;
 
 import java.util.List;
 import java.util.Optional;
-//orders.orderItems, orders.orderItems.good, orders.arrivalShop, orders.departureWarehouse
+
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     @EntityGraph(attributePaths = {"orders"})
@@ -18,5 +18,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @EntityGraph(attributePaths = {"orders", "orders.arrivalShop"})
     Optional<User> findById(Integer id);
 
+    @EntityGraph(attributePaths = {"orders"})
     Optional<User> findByUsername(String username);
 }

@@ -23,16 +23,16 @@ INSERT INTO STORAGE (address, city, storage_type) VALUES
     ('Warehouse #10, Berezovaya St, 10', 'Perm', 'WAREHOUSE');
 
 INSERT INTO USERS (username, password, name, surname, last_name, email, user_role) VALUES
-    ('alexey', 'password1', 'Alexey', 'Smirnov', 'Ivanovich', 'alexey.smirnov@example.com', 'USER'),
-    ('elena', 'password2', 'Elena', 'Ivanova', 'Petrovna', 'elena.ivanova@example.com', 'USER'),
-    ('petr', 'password3', 'Petr', 'Vlasov', 'Nikolaevich', 'petr.vlasov@example.com', 'USER'),
-    ('nikita', 'password4', 'Nikita', 'Morozov', 'Sergeevich', 'nikita.morozov@example.com', 'USER'),
-    ('anastasia', 'password5', 'Anastasia', 'Belova', 'Vladimirovna', 'anastasia.belova@example.com', 'USER'),
-    ('igor', 'password6', 'Igor', 'Lebedev', 'Alexandrovich', 'igor.lebedev@example.com', 'USER'),
-    ('svetlana', 'password7', 'Svetlana', 'Pavlova', 'Igorevna', 'svetlana.pavlova@example.com', 'USER'),
-    ('dmitry', 'password8', 'Dmitry', 'Orlov', 'Viktorovich', 'dmitry.orlov@example.com', 'USER'),
-    ('yulia', 'password9', 'Yulia', 'Fomina', 'Igorevna', 'yulia.fomina@example.com', 'USER'),
-    ('maxim', 'password10', 'Maxim', 'Kotov', 'Sergeevich', 'maxim.kotov@example.com', 'MANAGER');
+    ('alexey', '{bcrypt}$2a$10$0udaw7zS.bHGExH1EGGYX.7EyJNHXRsIypbi.QlQMsxT2sEsiZAMa', 'Alexey', 'Smirnov', 'Ivanovich', 'alexey.smirnov@example.com', 'USER'),
+    ('elena', '{bcrypt}$2a$10$Ijph1tILeNgiwu9IUWJx8OQicV0Yh/Bb7yjvGCLuR4Xd3jSRnDSVK', 'Elena', 'Ivanova', 'Petrovna', 'elena.ivanova@example.com', 'USER'),
+    ('petr', '{bcrypt}$2a$10$GgK4.dJFpZRUsfuFKo2Tv.7wb1lBLXN1v7qX60/FtIgPvZt.HZ/Gy', 'Petr', 'Vlasov', 'Nikolaevich', 'petr.vlasov@example.com', 'USER'),
+    ('nikita', '{bcrypt}$2a$10$4NowwldPiKG/mn77zZ7qCOmS9b74M7wOxEH4EwYUuHq70RDoUr6pq', 'Nikita', 'Morozov', 'Sergeevich', 'nikita.morozov@example.com', 'USER'),
+    ('anastasia', '{bcrypt}$2a$10$g4M/bJn9VsZS1lB0ecCl8OoWaN.W4Q2M.gMAYotVceWZeYenx5Knm', 'Anastasia', 'Belova', 'Vladimirovna', 'anastasia.belova@example.com', 'USER'),
+    ('igor', '{bcrypt}$2a$10$N4d.MO7HpDsbd/Xj/Ull2OmxcVmYtbxR9UbmvUqQr/45Vq5WGdnu.', 'Igor', 'Lebedev', 'Alexandrovich', 'igor.lebedev@example.com', 'USER'),
+    ('svetlana', '{bcrypt}$2a$10$9cwGP5DVfjR60iM3J9V56.B8ZExbec62rnqyvgmssFGtBs7mkx8fG', 'Svetlana', 'Pavlova', 'Igorevna', 'svetlana.pavlova@example.com', 'USER'),
+    ('dmitry', '{bcrypt}$2a$10$JkAqsf4kMYoMOHLVNwxKO.R43iHFg6nRhccfxrAFuwVkllpDr0wRK', 'Dmitry', 'Orlov', 'Viktorovich', 'dmitry.orlov@example.com', 'USER'),
+    ('yulia', '{bcrypt}$2a$10$Y/K2cs3DcnnBCHZyw5.rMuRhMCrodH3L9ZVQNLMJYddLxA3MNO4.2', 'Yulia', 'Fomina', 'Igorevna', 'yulia.fomina@example.com', 'ADMIN'),
+    ('maxim', '{bcrypt}$2a$10$DC4e3KPElXy/UbefCSbOmepe4fSfh5Yaer5LuIlo5hGFaO7WesChe', 'Maxim', 'Kotov', 'Sergeevich', 'maxim.kotov@example.com', 'MANAGER');
 
 INSERT INTO GOOD (good_type, price, description) VALUES
     ('BOOK', 500, 'Science fiction about space'),
@@ -135,15 +135,15 @@ INSERT INTO storage_good (storage_id, good_id, quantity) VALUES
     (20, 6, 1000), (20, 7, 1000), (20, 8, 1000), (20, 9, 1000), (20, 10, 1000);
 
 INSERT INTO ORDERS (user_id, order_date, arrival_date, order_status, total_price, departure_warehouse_id, arrival_shop_id, web) VALUES
-    (1, '2024-03-01', '2024-03-05', 'ASSEMBLING', 1050, 11, 1, true),
-    (2, '2024-03-02', '2024-03-06', 'TRANSIT', 600, 11, 1, true),
-    (3, '2024-03-03', '2024-03-07', 'READY', 450, 11, 1, true),
-    (4, '2024-03-04', '2024-03-08', 'FINISHED', 1200, 11, 1, false),
+    (1, '2024-03-01', '2024-03-05', 'READY', 1050, 11, 1, true),
+    (2, '2024-03-02', '2024-03-06', 'FINISHED', 600, 11, 1, true),
+    (3, '2024-03-03', '2024-03-07', 'FINISHED', 450, 11, 1, true),
+    (4, '2024-03-04', '2024-03-08', 'TRANSIT', 1200, 11, 1, false),
     (5, '2024-03-05', '2024-03-09', 'READY', 700, 11, 1, true),
     (6, '2024-03-06', '2024-03-10', 'ASSEMBLING', 630, 11, 1, true),
     (7, '2024-03-07', '2024-03-11', 'TRANSIT', 480, 11, 1, true),
     (8, '2024-03-08', '2024-03-12', 'READY', 950, 11, 1, true),
-    (9, '2024-03-09', '2024-03-13', 'FINISHED', 610, 11, 1, false),
+    (9, '2024-03-09', '2024-03-13', 'READY', 610, 11, 1, false),
     (10, '2024-03-10', '2024-03-14', 'ASSEMBLING', 560, 11, 1, true);
 
 INSERT INTO ORDER_ITEM (order_id, good_id, quantity, price_at_purchase) VALUES
@@ -161,13 +161,5 @@ INSERT INTO ORDER_ITEM (order_id, good_id, quantity, price_at_purchase) VALUES
     (10, 9, 1, 560);
 
 INSERT INTO BILL (order_id, shop_id, date, returned) VALUES
-    (1, 1, '2024-03-06', false),
     (2, 1, '2024-03-07', false),
-    (3, 1, '2024-03-08', false),
-    (4, 1, '2024-03-09', false),
-    (5, 1, '2024-03-10', false),
-    (6, 1, '2024-03-11', false),
-    (7, 1, '2024-03-12', false),
-    (8, 1, '2024-03-13', false),
-    (9, 1, '2024-03-14', false),
-    (10, 1,'2024-03-15', false);
+    (3, 1, '2024-03-08', false)

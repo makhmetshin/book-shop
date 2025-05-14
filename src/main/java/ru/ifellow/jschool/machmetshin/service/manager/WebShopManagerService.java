@@ -91,6 +91,10 @@ public class WebShopManagerService extends AbstractShopManager{
     @Transactional
     public Bill takeawayOrder(Integer orderId) {
         Order order = entityExistsValidator.validate(orderService.findById(orderId), orderId, Order.class);
+
+        if(! order.getOrderStatus().equals(OrderStatus.READY))
+            throw new IllegalStateException("Order should be in READY state to take it away");
+
         Bill bill = Bill.builder()
                 .order(order)
                 .shop(order.getArrivalShop())

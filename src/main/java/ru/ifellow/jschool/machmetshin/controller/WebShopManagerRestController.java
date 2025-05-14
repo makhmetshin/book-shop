@@ -1,14 +1,21 @@
 package ru.ifellow.jschool.machmetshin.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.ifellow.jschool.machmetshin.dto.good.book.BookDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.FindBooksDto;
 import ru.ifellow.jschool.machmetshin.entity.order.OrderStatus;
+import ru.ifellow.jschool.machmetshin.entity.user.User;
+import ru.ifellow.jschool.machmetshin.service.AuthorizationService;
 import ru.ifellow.jschool.machmetshin.service.OrderService;
 import ru.ifellow.jschool.machmetshin.service.StorageGoodService;
+import ru.ifellow.jschool.machmetshin.service.UserService;
 import ru.ifellow.jschool.machmetshin.service.manager.WebShopManagerService;
 
 import java.util.List;
@@ -21,19 +28,37 @@ public class WebShopManagerRestController {
     private final WebShopManagerService webShopManagerService;
     private final OrderService orderService;
     private final StorageGoodService storageGoodService;
+    private final UserService userService;
+    private final AuthorizationService authorizationService;
 
 
     @PostMapping(path = "create_order", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String createOrder(@RequestBody CreateWebOrderDto createWebOrderDto) {
-        webShopManagerService.createOrder(createWebOrderDto);
-        return "order created";
+    public ResponseEntity<String> createOrder(@RequestBody CreateWebOrderDto createWebOrderDto, Authentication authentication) {
+
+        if(authorizationService.isAdminOrUserWorksWithHisResources(createWebOrderDto.getUserId(), authentication)) {
+
+            webShopManagerService.createOrder(createWebOrderDto);
+            return ResponseEntity.ok().body("Order was successfully created");
+        }
+        else return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Access denied. You can create order only for your account. Only admin can create orders for other accounts");
     }
 
     @PatchMapping(path = "cancel_order")
-    public String cancelOrder(@RequestParam Integer orderId) {
-        webShopManagerService.cancelOrder(orderId);
-        System.out.println(orderService.findById(orderId));
-        return "order with id %d canceled".formatted(orderId);
+    public ResponseEntity<String> cancelOrder(@RequestParam Integer orderId, Authentication authentication) {
+
+        if( authorizationService.authenticatedUserGotThisOrder(orderId, authentication) || authorizationService.isAdmin(authentication)) {
+            try {
+                webShopManagerService.cancelOrder(orderId);
+            }
+            catch (EntityNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            System.out.println(orderService.findById(orderId));
+            return ResponseEntity.ok().body("Order was successfully canceled");
+        }
+        else return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Access denied. You can cancel order only for your account. Only admin can cancel orders for other accounts");
     }
 
 

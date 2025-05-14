@@ -4,6 +4,9 @@ package ru.ifellow.jschool.machmetshin.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +19,14 @@ import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdRepositoryValidator;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class UserService implements Findable<Integer, User> {
+public class UserService implements Findable<Integer, User>, UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
@@ -30,6 +34,23 @@ public class UserService implements Findable<Integer, User> {
     private final EntityFoundByIdRepositoryValidator entityFoundByIdRepositoryValidator;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found"));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                Collections.singleton(user.getRole())
+        );
+    }
+
+    public User findByUserName(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found"));
+    }
 
     public UserOrdersDto findByUserIdWithOrders(Integer id) {
         User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
@@ -62,19 +83,13 @@ public class UserService implements Findable<Integer, User> {
     }
     @Transactional
     public void updateAccountDetails(Integer id, UserAccountDto userAccountDto) {
-        System.out.println("update started");
         User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
-        System.out.println(user);
         user.setUsername(userAccountDto.getUsername());
         user.setName(userAccountDto.getName());
         user.setSurname(userAccountDto.getSurname());
         user.setLastName(userAccountDto.getLastName());
         user.setEmail(userAccountDto.getEmail());
-        System.out.println(user);
         userRepository.save(user);
-        System.out.println("again from db");
-        user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
-        System.out.println(user);
     }
 
     @Override
