@@ -15,6 +15,8 @@ public class OrderRestController {
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto findById(@RequestParam Integer id) {
+        // Не надо дважды вызывать метод сервиса, только для того, чтобы вывести результат в лог.
+        // Можно же положить результат в локальную переменную =)
         System.out.println(orderService.findByIdWithDependencies(id));
         return orderService.findByIdWithDependencies(id);
     }

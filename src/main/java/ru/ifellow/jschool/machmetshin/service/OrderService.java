@@ -50,7 +50,7 @@ public class OrderService implements Findable<Integer, Order> {
         List<OrderItemDtoWithGoodDto> orderItemDtosWithGood = order.getOrderItems().stream()
                 .map(orderItem -> {
                     Good good = orderItem.getGood();
-                    GoodDto goodDto = new GoodDto(good.getId(), good.getGoodType(), good.getPrice(), good.getDescription());
+                    GoodDto goodDto = new GoodDto(good.getId(), good.getGoodType(), good.getPrice(), good.getDescription()); //выглядит развестисто, может стоит сделать для GoodDto конструктор принимающий только Good?
                     return new OrderItemDtoWithGoodDto(goodDto, orderItem.getQuantity(), orderItem.getPriceAtPurchase());
                 })
                 .toList();

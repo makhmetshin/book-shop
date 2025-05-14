@@ -10,7 +10,7 @@ import ru.ifellow.jschool.machmetshin.entity.user.User;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) // readOnly = true - хорошая практика, поддерживаю
 public class AuthorizationService {
 
     private final UserService userService;
@@ -18,6 +18,7 @@ public class AuthorizationService {
     public boolean isAdminOrUserWorksWithHisResources(Integer userIdWhichResourcesAreAffected, Authentication authentication) {
         User authenticatedUser = userService.findByUserName(authentication.getName());
 
+        //можно сделать просто return authenticatedUser.getId().equals(userIdWhichResourcesAreAffected) || isAdmin(authentication)
         if(authenticatedUser.getId().equals(userIdWhichResourcesAreAffected) || isAdmin(authentication))
             return true;
         else return false;

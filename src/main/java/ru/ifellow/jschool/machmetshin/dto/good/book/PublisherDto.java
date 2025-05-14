@@ -8,9 +8,9 @@ import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode
-@ToString
-@SuperBuilder
+@EqualsAndHashCode //аннотация Data уже включает в себя EqualsAndHashCode
+@ToString //аналогично, аннотация Data уже включает в себя ToString
+@SuperBuilder // зачем? Это вроде только для иерархичных классов имеет смысл
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublisherDto {

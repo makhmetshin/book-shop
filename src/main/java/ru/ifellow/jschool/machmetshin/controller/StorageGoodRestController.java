@@ -13,7 +13,7 @@ public class StorageGoodRestController {
 
     private final StorageGoodService storageGoodService;
 
-    @PostMapping(path="")
+    @PostMapping(path="") // пустой path можно не объявлять совсем, вроде
     public Integer getAmountOfGood(@RequestBody StorageGoodGetAmountDto storageGoodGetAmountDto) {
         return storageGoodService.getAmountOfGood(storageGoodGetAmountDto.getGoodId(),
                 storageGoodGetAmountDto.getStorageId(),

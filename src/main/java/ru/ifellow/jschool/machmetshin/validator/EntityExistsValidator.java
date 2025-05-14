@@ -12,6 +12,7 @@ import java.util.Optional;
 @Component
 public class EntityExistsValidator {
 
+    // Параметр айди в методе не используется. Либо удалить, либо заиспользовать
     public  <V> V validate(Optional<V> optionalEntity, Integer id, Class clazz)  {
 
         V entity = optionalEntity

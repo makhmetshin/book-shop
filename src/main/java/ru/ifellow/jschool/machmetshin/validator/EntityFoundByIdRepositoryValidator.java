@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 
-@AllArgsConstructor
+@AllArgsConstructor //есть ли смысл в объявлении этого конструктора?
 @Component
 public class EntityFoundByIdRepositoryValidator {
 
+    // Если честно, что метод validate на самом деле не только валидирует, но еще и ищет и возвращает сущность из БД
     public <K, V> V validate(JpaRepository<V, K> jpaRepository, K entityId, Class<V> clazz)  {
 
         Object rawEntity = jpaRepository.findById(entityId)

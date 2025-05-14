@@ -42,7 +42,7 @@ public class JpaConfiguration {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("ru.ifellow.jschool.machmetshin.entity");
-        factory.setDataSource(dataSource());
+        factory.setDataSource(dataSource()); //тут dataSource можно не как метод вызывать, а инжектить как параметр метода
         factory.setJpaProperties(jpaProperties);
         return factory;
     }

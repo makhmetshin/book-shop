@@ -26,8 +26,11 @@ public class ShopManagerRestController {
     @PostMapping(path = "/sell", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String sellGoods(@RequestBody CreateOrderDto createOrderDto) {
         System.out.println(createOrderDto);
-        Bill bill =  shopManagerService.sellGoods(createOrderDto);
+        Bill bill = shopManagerService.sellGoods(createOrderDto);
         System.out.println(bill.getOrder());
+        // Две строки ниже - это что-то для отладки. В рабочем коде такого быть не должно.
+        // Если хочется продемонстрировать работу - можно убрать в интегротест.
+        // Для остальных подобных мест аналогично.
         System.out.println(storageGoodService.findByStorageIdAndGoodId(1,1));
         System.out.println(storageGoodService.findByStorageIdAndGoodId(1,2));
         return "Goods were sold";
@@ -53,6 +56,7 @@ public class ShopManagerRestController {
 
     @PostMapping(path = "/books", consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<BookDto> books(@RequestBody FindBooksDto findBooksDto, @RequestParam Integer shopId) {
+        //аналогично, дважды вызывать не нужно
         System.out.println(shopManagerService.findBooksInShopByGenreAndAuthor(shopId, findBooksDto));
         return shopManagerService.findBooksInShopByGenreAndAuthor(shopId, findBooksDto);
     }

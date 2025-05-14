@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+//тут и далее - EntityGraph для избавления от n+1 проблемы, верно?
 public interface BookRepository extends JpaRepository<Book, Integer> {
     @EntityGraph(attributePaths = {"author", "publisher"})
     Optional<Book> findById(Integer id);

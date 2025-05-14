@@ -23,5 +23,5 @@ public class OrderDto {
     private Integer totalPrice;
     private StorageDto departureWarehouseDto;
     private StorageDto arrivalShopDto;
-    private Integer user_id;
+    private Integer user_id; //userId?
 }

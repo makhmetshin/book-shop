@@ -28,7 +28,7 @@ public class WebShopManagerRestController {
     private final WebShopManagerService webShopManagerService;
     private final OrderService orderService;
     private final StorageGoodService storageGoodService;
-    private final UserService userService;
+    private final UserService userService; //не используется, можно удалить?
     private final AuthorizationService authorizationService;
 
 

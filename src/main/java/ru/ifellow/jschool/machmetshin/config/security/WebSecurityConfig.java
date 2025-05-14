@@ -37,7 +37,7 @@ public class WebSecurityConfig {
                                 "/api/v1/shops/return",
                                 "/api/v1/storages"
                                 )
-                        .hasAnyRole("ADMIN", "MANAGER")
+                        .hasAnyRole("ADMIN", "MANAGER") //а почему тут заданы строки тут, а не использованы значения из enum-а Role?
                         .requestMatchers(
                                 "/api/v1/web_shop/cancel_order",
                                 "/api/v1/web_shop/create_order",
