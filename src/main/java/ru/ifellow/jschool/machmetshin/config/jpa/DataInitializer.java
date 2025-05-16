@@ -29,7 +29,7 @@ public class DataInitializer implements SmartInitializingSingleton {
         populator.addScript(new ClassPathResource("data.sql"));
         DatabasePopulatorUtils.execute(populator, dataSource);
 
-        System.out.println("Program has just begun its work");
+        System.out.println("Program has just begun its work.");
         List<Author> authorList = authorRepository.findAll();
         if (authorList.isEmpty()) {
             System.out.println("Author list is empty");

@@ -4,8 +4,6 @@ import lombok.*;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

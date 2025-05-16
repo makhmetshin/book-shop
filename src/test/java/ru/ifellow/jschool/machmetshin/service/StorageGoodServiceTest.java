@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodGetAmountDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
@@ -68,7 +70,7 @@ public class StorageGoodServiceTest {
                 .findByStorageIdAndGoodId(1,1);
 
 
-        spyStorageGoodService.removeGood(1, 1, 100);
+        spyStorageGoodService.removeGood(new StorageGoodDto(1, 1, 100));
 
         Mockito.verify(storageGoodRepository).save(storageGood);
         Assertions.assertThat(storageGood.getQuantity()).isEqualTo(20);
@@ -83,11 +85,11 @@ public class StorageGoodServiceTest {
         Mockito.doReturn(Optional.of(storageGood)).when(storageGoodRepository)
                 .findByStorageIdAndGoodId(1,1);
 
-        spyStorageGoodService.addGood(1, 1, 100);
+        spyStorageGoodService.addGood(new StorageGoodDto(1, 1, 100));
         Assertions.assertThat(storageGood.getQuantity()).isEqualTo(220);
         Mockito.verify(storageGoodRepository).save(Mockito.eq(storageGood));
 
-        spyStorageGoodService.addGood(2, 2, 500);
+        spyStorageGoodService.addGood(new StorageGoodDto(2, 2, 500));
         StorageGood storageGood2 = new StorageGood();
         storageGood2.setQuantity(500);
         Mockito.verify(storageGoodRepository).save(Mockito.eq(storageGood2));
@@ -105,16 +107,16 @@ public class StorageGoodServiceTest {
 
         spyStorageGoodService.addGoods(goods, 1);
 
-        Mockito.verify(spyStorageGoodService).addGood(0, 1, 2);
-        Mockito.verify(spyStorageGoodService).addGood(2, 1, 1);
-        Mockito.verify(spyStorageGoodService).addGood(3, 1, 1);
+        Mockito.verify(spyStorageGoodService).addGood(new StorageGoodDto(0, 1, 2));
+        Mockito.verify(spyStorageGoodService).addGood(new StorageGoodDto(2, 1, 1));
+        Mockito.verify(spyStorageGoodService).addGood(new StorageGoodDto(3, 1, 1));
     }
 
     @Test
     public void getAmountOfGoodTest() {
 
         assertThrows(EntityNotFoundException.class,
-                () -> spyStorageGoodService.getAmountOfGood(1,1, StorageType.SHOP));
+                () -> spyStorageGoodService.getAmountOfGood(new StorageGoodGetAmountDto(1,1, StorageType.SHOP)));
 
         StorageGood storageGood = new StorageGood();
         storageGood.setId(1);
@@ -126,7 +128,7 @@ public class StorageGoodServiceTest {
         Mockito.doReturn(Optional.of(storageGood)).when(storageGoodRepository)
                 .findByStorageIdAndGoodId(1,1);
 
-        Assertions.assertThat(spyStorageGoodService.getAmountOfGood(1,1, StorageType.SHOP))
+        Assertions.assertThat(spyStorageGoodService.getAmountOfGood(new StorageGoodGetAmountDto(1,1, StorageType.SHOP)))
                 .isEqualTo(120);
 
     }

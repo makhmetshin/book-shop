@@ -10,6 +10,7 @@ import ru.ifellow.jschool.machmetshin.dto.good.book.BookDto;
 import ru.ifellow.jschool.machmetshin.dto.good.book.PublisherDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.FindBooksDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.GoodType;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
@@ -25,7 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+
 @Service
 @Transactional(readOnly = true)
 public class WebShopManagerService extends AbstractShopManager{
@@ -74,7 +75,7 @@ public class WebShopManagerService extends AbstractShopManager{
 
             Integer goodId = orderItem.getGood().getId();
             Integer quantity = orderItem.getQuantity();
-            storageGoodService.addGood(goodId, warehouse.getId(), quantity);
+            storageGoodService.addGood(new StorageGoodDto(goodId, warehouse.getId(), quantity));
         }
 
     }

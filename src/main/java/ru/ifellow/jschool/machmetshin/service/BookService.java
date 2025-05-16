@@ -1,25 +1,22 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.BookRepository;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
+import ru.ifellow.jschool.machmetshin.service.interfaces.Finder;
 
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @AllArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class BookService implements Findable<Integer, Book> {
+public class BookService implements Finder<Integer, Book> {
 
     private final BookRepository bookRepository;
 

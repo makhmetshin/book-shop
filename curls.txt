@@ -3,7 +3,7 @@
 "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA==" - для обычного пользователя dmitry (dmitry:password8)
 
 USER findById
-curl -Uri "http://localhost:8080/api/v1/users?id=3" -Method GET `
+curl -Uri "http://localhost:8080/api/v1/users?id=8" -Method GET `
      -Headers @{ "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA=="}
 
 USER accountInformation
@@ -68,7 +68,7 @@ curl -Uri "http://localhost:8080/api/v1/web_shop/create_order" `
          ]
      }'
 
-WEB_SHOP cancel order обычный пользователь отменяет свой заказ
+WEB_SHOP cancel order админ отменяет свой заказ
 curl -Uri "http://localhost:8080/api/v1/web_shop/cancel_order?orderId=1" -Method PATCH `
      -Headers @{"Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5"}
 
@@ -119,7 +119,6 @@ curl -Uri "http://localhost:8080/api/v1/shops/sell" `
      }'
 
 
-
 USUAL_SHOP distribute goods
 curl -Uri "http://localhost:8080/api/v1/shops/distribute" `
      -Method PATCH `
@@ -165,3 +164,6 @@ curl -Uri "http://localhost:8080/api/v1/storages" `
          "storageType": "WAREHOUSE"
      }'
 
+ORDER findById
+curl -Uri "http://localhost:8080/api/v1/orders?id=8" -Method GET `
+     -Headers @{"Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA=="}

@@ -17,6 +17,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.ifellow.jschool.machmetshin.entity.user.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -37,15 +38,12 @@ public class WebSecurityConfig {
                                 "/api/v1/shops/return",
                                 "/api/v1/storages"
                                 )
-                        .hasAnyRole("ADMIN", "MANAGER") //а почему тут заданы строки тут, а не использованы значения из enum-а Role?
+                        .hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
                         .requestMatchers(
                                 "/api/v1/web_shop/cancel_order",
                                 "/api/v1/web_shop/create_order",
                                 "/api/v1/users/**"
-                        ).hasAnyRole("USER", "ADMIN")
-
-                        .requestMatchers("/api/v1/web_shop/create_order").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
+                        ).hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());

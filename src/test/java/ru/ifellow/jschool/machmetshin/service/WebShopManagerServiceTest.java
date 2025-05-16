@@ -10,6 +10,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.order.OrderItemDtoWithGoodId;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodGetAmountDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Author;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
@@ -21,10 +23,9 @@ import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
 import ru.ifellow.jschool.machmetshin.service.manager.WebShopManagerService;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
-import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
+
 
 import java.util.*;
 
@@ -39,17 +40,15 @@ public class WebShopManagerServiceTest {
     @Mock
     private OrderService orderService;
     @Mock
-    private WarehouseService warehouseService;
+    private UserService userService;
     @Mock
-    private ShopService shopService;
+    private EntityExistsValidator entityExistsValidator;
     @Mock
     private BillService billService;
     @Mock
-    private UserService userService;
+    private WarehouseService warehouseService;
     @Mock
-    private StorageTypeValidator storageTypeValidator;
-    @Mock
-    private EntityExistsValidator entityExistsValidator;
+    private ShopService shopService;
     @Mock
     private GoodService goodService;
 
@@ -64,8 +63,8 @@ public class WebShopManagerServiceTest {
         orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(1, 10, 100));
         orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(2, 20, 200));
 
-        Mockito.doReturn(0).when(storageGoodService).getAmountOfGood(Mockito.anyInt(),
-                Mockito.anyInt(), Mockito.any(StorageType.class));
+        Mockito.doReturn(0).when(storageGoodService)
+                .getAmountOfGood(Mockito.any(StorageGoodGetAmountDto.class));
         assertThrows(IllegalStateException.class, () -> {
             spyWebShopManagerService.createOrder(
                     new CreateWebOrderDto(1,1, orderItemDtoWithGoodIds,11));
@@ -73,8 +72,8 @@ public class WebShopManagerServiceTest {
 
 
         Mockito.doReturn(Optional.of(new User())).when(userService).findById(Mockito.anyInt());
-        Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(Mockito.anyInt(),
-                Mockito.anyInt(), Mockito.any(StorageType.class));
+        Mockito.doReturn(100).when(storageGoodService)
+                .getAmountOfGood(Mockito.any(StorageGoodGetAmountDto.class));
 
         Mockito.doReturn(new Shop()).when(entityExistsValidator)
                 .validate(Mockito.any(), Mockito.anyInt(), Mockito.eq(Shop.class));
@@ -125,12 +124,15 @@ public class WebShopManagerServiceTest {
 
         spyWebShopManagerService.cancelOrder(1);
 
-        Mockito.verify(storageGoodService).addGood(
-                Mockito.eq(0), Mockito.anyInt(), Mockito.eq(0));
-        Mockito.verify(storageGoodService).addGood(
-                Mockito.eq(1), Mockito.anyInt(), Mockito.eq(10));
+        Mockito.verify(storageGoodService).addGood(Mockito.argThat(dto ->
+                dto.getGoodId() == 0 && dto.getQuantity() == 0
+        ));
+
+        Mockito.verify(storageGoodService).addGood(Mockito.argThat(dto ->
+                dto.getGoodId() == 1 && dto.getQuantity() == 10
+        ));
     }
-//
+
     @Test
     public void changeOrderStatusTest() {
         Order order = Order.builder().id(1).build();
@@ -138,12 +140,12 @@ public class WebShopManagerServiceTest {
         spyWebShopManagerService.changeOrderStatus(OrderStatus.TRANSIT, 1);
         Assertions.assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.TRANSIT);
     }
-//
+
     @Test
     public void takeawayOrderTest() {
         Shop shop = new Shop();
 
-        Order order = Order.builder().id(1).arrivalShop(shop).build();
+        Order order = Order.builder().id(1).orderStatus(OrderStatus.READY).arrivalShop(shop).build();
         Mockito.doReturn(order).when(entityExistsValidator).validate(Mockito.any(),
                 Mockito.anyInt(), Mockito.eq(Order.class));
 

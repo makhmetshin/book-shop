@@ -18,6 +18,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "ru.ifellow.jschool.machmetshin.database.repository")
 @EnableTransactionManagement(proxyTargetClass = true)
 public class JpaConfiguration {
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
@@ -29,7 +30,7 @@ public class JpaConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(true);
@@ -42,7 +43,7 @@ public class JpaConfiguration {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("ru.ifellow.jschool.machmetshin.entity");
-        factory.setDataSource(dataSource()); //тут dataSource можно не как метод вызывать, а инжектить как параметр метода
+        factory.setDataSource(dataSource);
         factory.setJpaProperties(jpaProperties);
         return factory;
     }

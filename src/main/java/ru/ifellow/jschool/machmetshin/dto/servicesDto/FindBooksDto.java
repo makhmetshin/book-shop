@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor

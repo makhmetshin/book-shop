@@ -43,13 +43,11 @@ public class ApplicationRunner {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(8080);
         tomcat.setBaseDir(".");
-        tomcat.getConnector(); // // неочевидный шаг но без него не заработает
-        // https://stackoverflow.com/questions/56668892/embedded-tomcat-java-application-is-running-but-server-cannot-be-reached/61394907
+        tomcat.getConnector();
 
         var base = new File(".").getAbsolutePath();
         var ctx = tomcat.addContext("", base);
-
-        //https://github.com/jfclere/embedded_tomcat_filter/blob/master/src/main/java/org/example/tomcat/filter/Main.java
+        
         Class filterClass = DelegatingFilterProxy.class;
         String filterName = filterClass.getName();
         FilterDef def = new FilterDef();

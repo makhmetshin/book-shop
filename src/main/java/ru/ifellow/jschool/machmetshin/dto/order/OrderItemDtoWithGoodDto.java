@@ -4,8 +4,6 @@ import lombok.*;
 import ru.ifellow.jschool.machmetshin.dto.good.GoodDto;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

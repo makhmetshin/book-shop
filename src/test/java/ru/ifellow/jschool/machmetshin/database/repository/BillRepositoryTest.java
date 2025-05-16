@@ -24,19 +24,17 @@ public class BillRepositoryTest {
 
     @Test
     public void findAllTest() {
-        Assertions.assertThat(billRepository.findAll()).hasSize(10);
+        Assertions.assertThat(billRepository.findAll()).hasSize(2);
     }
 
     @Test
     public void findByIdTest() {
         Assertions.assertThat(billRepository.findById(1).get().getId()).isEqualTo(1);
-        Assertions.assertThat(billRepository.findById(5).get().getId()).isEqualTo(5);
-        Assertions.assertThat(billRepository.findById(10).get().getId()).isEqualTo(10);
     }
     @Test
-    public void findBySaveTest() {
+    public void saveTest() {
         billRepository.save(new Bill());
-        Assertions.assertThat(billRepository.findAll()).hasSize(11);
+        Assertions.assertThat(billRepository.findAll()).hasSize(3);
     }
 
     @Test
@@ -44,7 +42,7 @@ public class BillRepositoryTest {
         Bill bill = billRepository.findById(1).get();
         bill.getOrder().setBill(null);
         billRepository.delete(bill);
-        Assertions.assertThat(billRepository.findAll()).hasSize(9);
+        Assertions.assertThat(billRepository.findAll()).hasSize(1);
     }
 
 

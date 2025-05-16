@@ -1,13 +1,12 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.ShopRepository;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
 import ru.ifellow.jschool.machmetshin.entity.storage.Shop;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
+import ru.ifellow.jschool.machmetshin.service.interfaces.Finder;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
 
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class ShopService implements Findable<Integer, Shop> {
+public class ShopService implements Finder<Integer, Shop> {
 
     private final ShopRepository shopRepository;
     private final EntityExistsValidator entityExistsValidator;

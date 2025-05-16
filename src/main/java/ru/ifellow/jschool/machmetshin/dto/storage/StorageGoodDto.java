@@ -3,8 +3,6 @@ package ru.ifellow.jschool.machmetshin.dto.storage;
 import lombok.*;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

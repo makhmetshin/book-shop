@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.StorageGoodRepository;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodGetAmountDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.storage.Storage;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageGood;
 import ru.ifellow.jschool.machmetshin.entity.storage.StorageType;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
+import ru.ifellow.jschool.machmetshin.service.interfaces.Finder;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class StorageGoodService implements Findable<Integer, StorageGood> {
+public class StorageGoodService implements Finder<Integer, StorageGood> {
 
     private final StorageGoodRepository storageGoodRepository;
     private final GoodService goodService;
@@ -38,9 +39,10 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
     }
 
     @Transactional
-    public void removeGood(Integer goodId, Integer storageId, int amount) {
-
-
+    public void removeGood(StorageGoodDto storageGoodDto) {
+        Integer goodId = storageGoodDto.getGoodId();
+        Integer storageId = storageGoodDto.getStorageId();
+        Integer amount = storageGoodDto.getQuantity();
         StorageGood storageGood = storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId)
                 .orElseThrow(() -> new EntityNotFoundException("Good not found in this storage"));
 
@@ -55,13 +57,16 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
     }
 
     @Transactional
-    public void addGood(Integer goodId, Integer storageId, int amount) {
+    public void addGood(StorageGoodDto storageGoodDto) {
+        Integer goodId = storageGoodDto.getGoodId();
+        Integer storageId = storageGoodDto.getStorageId();
+        Integer amount = storageGoodDto.getQuantity();
         StorageGood storageGood = storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId)
                 .map(sg -> {
                     sg.setQuantity(sg.getQuantity() + amount);
                     return sg;
                 })
-                // вот тут важно именно orElseGet, а не orElse!
+
                 .orElseGet(() -> StorageGood.builder()
                         .storage(entityExistsValidator.validate(storageService.findById(storageId), storageId, Storage.class))
                         .good(entityExistsValidator.validate(goodService.findById(goodId), goodId, Good.class))
@@ -75,11 +80,13 @@ public class StorageGoodService implements Findable<Integer, StorageGood> {
     public void addGoods(List<Good> goods, Integer storageId) {
         goods.stream()
                 .collect(Collectors.groupingBy(Good::getId, Collectors.summingInt(g -> 1)))
-                .forEach((goodId, amount) -> addGood(goodId, storageId, amount));
+                .forEach((goodId, amount) -> addGood(new StorageGoodDto(goodId, storageId, amount)));
     }
 
-    public Integer getAmountOfGood(Integer goodId, Integer storageId, StorageType storageType) {
-
+    public Integer getAmountOfGood(StorageGoodGetAmountDto storageGoodGetAmountDto) {
+        Integer goodId = storageGoodGetAmountDto.getGoodId();
+        Integer storageId = storageGoodGetAmountDto.getStorageId();
+        StorageType storageType = storageGoodGetAmountDto.getStorageType();
         return storageGoodRepository.findByStorageIdAndGoodId(storageId, goodId)
                 .filter(sg -> sg.getStorage().getStorageType().equals(storageType))
                 .map(StorageGood::getQuantity)

@@ -6,8 +6,6 @@ import lombok.experimental.SuperBuilder;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor

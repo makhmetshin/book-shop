@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +21,5 @@ public class OrderDto {
     private Integer totalPrice;
     private StorageDto departureWarehouseDto;
     private StorageDto arrivalShopDto;
-    private Integer user_id; //userId?
+    private Integer userId;
 }

@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.dto.good.book.AuthorDto;
 import ru.ifellow.jschool.machmetshin.dto.good.book.BookDto;
 import ru.ifellow.jschool.machmetshin.dto.good.book.PublisherDto;
+import ru.ifellow.jschool.machmetshin.dto.order.BillDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.DistributeGoodDto;
 import ru.ifellow.jschool.machmetshin.dto.servicesDto.FindBooksDto;
+import ru.ifellow.jschool.machmetshin.dto.servicesDto.TransportGoodsDto;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
 import ru.ifellow.jschool.machmetshin.entity.good.book.Book;
@@ -56,20 +58,25 @@ public class ShopManagerService extends AbstractShopManager{
     }
 
     @Transactional
-    public Bill sellGoods(CreateOrderDto createOrderDto ) {
+    public BillDto sellGoods(CreateOrderDto createOrderDto ) {
         Order order = super.createOrder(createOrderDto, false);
         Integer shopId = createOrderDto.getReceiveStorageId();
         Shop shop = entityExistsValidator.validate(shopService.findById(shopId), shopId, Shop.class);
-
+        LocalDate now = LocalDate.now();
         Bill bill = Bill.builder()
                 .order(order)
                 .shop(shop)
                 .returned(false)
-                .date(LocalDate.now())
+                .date(now)
                 .build();
         billService.save(bill);
 
-        return bill;
+        return BillDto.builder()
+                .orderId(order.getId())
+                .shopDto(new StorageDto(shopId, shop.getAddress(), shop.getCity(), StorageType.SHOP))
+                .returned(false)
+                .date(now)
+                .build();
     }
 
     @Transactional
@@ -96,20 +103,24 @@ public class ShopManagerService extends AbstractShopManager{
         Iterator<Integer> iterator = shopIds.iterator();
 
         Integer firstShopId = iterator.next();
-        transportGoodsFromWarehouse(goodId, warehouseId, firstShopId, booksPerShop + remainder);
+        transportGoodsFromWarehouse(new TransportGoodsDto(goodId, warehouseId, firstShopId, booksPerShop + remainder));
 
         while (iterator.hasNext()) {
             Integer shopId = iterator.next();
-            transportGoodsFromWarehouse(goodId, warehouseId, shopId, booksPerShop);
+            transportGoodsFromWarehouse(new TransportGoodsDto(goodId, warehouseId, shopId, booksPerShop));
         }
     }
 
-    private void transportGoodsFromWarehouse(Integer goodId, Integer warehouseId, Integer shopId, Integer amount)  {
+    private void transportGoodsFromWarehouse(TransportGoodsDto transportGoodsDto)  {
+        Integer goodId = transportGoodsDto.getGoodId();
+        Integer warehouseId = transportGoodsDto.getDepartureStorageId();
+        Integer shopId = transportGoodsDto.getArrivalStorageId();
+        Integer amount = transportGoodsDto.getAmount();
         entityExistsValidator.validate(warehouseService.findById(warehouseId), warehouseId, Warehouse.class);
         entityExistsValidator.validate(shopService.findById(shopId), shopId, Shop.class);
 
-        storageGoodService.removeGood(goodId, warehouseId, amount);
-        storageGoodService.addGood(goodId, shopId, amount);
+        storageGoodService.removeGood(new StorageGoodDto(goodId, warehouseId, amount));
+        storageGoodService.addGood(new StorageGoodDto(goodId, shopId, amount));
     }
 
     public List<BookDto> findBooksInShopByGenreAndAuthor(Integer shopId, FindBooksDto findBooksDto) {

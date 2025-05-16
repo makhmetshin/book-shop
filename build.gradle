@@ -38,6 +38,8 @@ dependencies {
     implementation 'org.springframework.security:spring-security-web:6.0.0'
     implementation 'org.springframework.security:spring-security-config:6.0.0'
 
+
+    testImplementation 'org.springframework.security:spring-security-test:6.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core'
     testImplementation platform('org.junit:junit-bom')

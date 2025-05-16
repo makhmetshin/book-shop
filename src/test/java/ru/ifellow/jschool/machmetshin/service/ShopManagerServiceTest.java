@@ -23,7 +23,7 @@ import ru.ifellow.jschool.machmetshin.entity.storage.*;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
 import ru.ifellow.jschool.machmetshin.service.manager.ShopManagerService;
 import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
-import ru.ifellow.jschool.machmetshin.validator.StorageTypeValidator;
+
 
 import java.util.*;
 
@@ -44,8 +44,7 @@ public class ShopManagerServiceTest {
     private OrderService orderService;
     @Mock
     private UserService userService;
-    @Mock
-    private StorageTypeValidator storageTypeValidator;
+
     @Mock
     private EntityExistsValidator entityExistsValidator;
     @Mock
@@ -87,9 +86,18 @@ public class ShopManagerServiceTest {
         Mockito.doNothing().when(billService).save(Mockito.any(Bill.class));
 
         Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(
-                Mockito.eq(1), Mockito.eq(15), Mockito.any());
+                Mockito.argThat(dto ->
+                        dto.getGoodId() == 1 &&
+                                dto.getStorageId() == 15
+                )
+        );
+
         Mockito.doReturn(100).when(storageGoodService).getAmountOfGood(
-                Mockito.eq(2), Mockito.eq(15), Mockito.any());
+                Mockito.argThat(dto ->
+                        dto.getGoodId() == 2 &&
+                                dto.getStorageId() == 15
+                )
+        );
 
         List<OrderItemDtoWithGoodId> orderItemDtoWithGoodIds = new ArrayList<>();
         orderItemDtoWithGoodIds.add(new OrderItemDtoWithGoodId(1, 10, 100));
@@ -97,7 +105,7 @@ public class ShopManagerServiceTest {
         CreateOrderDto createOrderDto = new CreateOrderDto(1, 15, orderItemDtoWithGoodIds);
 
         Assertions.assertThat(shopManagerService.sellGoods(createOrderDto)
-                        .getShop().getId()).isEqualTo(15);
+                        .getShopDto().getId()).isEqualTo(15);
 
     }
     @Test
@@ -115,9 +123,9 @@ public class ShopManagerServiceTest {
                 .doesNotThrowAnyException();
 
         Mockito.verify(storageGoodService)
-                .removeGood(1, 1, 7);
+                .removeGood(new StorageGoodDto(1, 1, 7));
         Mockito.verify(storageGoodService)
-                .addGood(1, 2, 6);
+                .addGood(new StorageGoodDto(1, 2, 6));
     }
 
 

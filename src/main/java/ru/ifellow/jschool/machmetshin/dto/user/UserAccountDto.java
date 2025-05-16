@@ -5,8 +5,6 @@ import jakarta.persistence.Column;
 import lombok.*;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

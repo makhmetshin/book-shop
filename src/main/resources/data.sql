@@ -138,12 +138,12 @@ INSERT INTO ORDERS (user_id, order_date, arrival_date, order_status, total_price
     (1, '2024-03-01', '2024-03-05', 'READY', 1050, 11, 1, true),
     (2, '2024-03-02', '2024-03-06', 'FINISHED', 600, 11, 1, true),
     (3, '2024-03-03', '2024-03-07', 'FINISHED', 450, 11, 1, true),
-    (4, '2024-03-04', '2024-03-08', 'TRANSIT', 1200, 11, 1, false),
+    (4, '2024-03-04', '2024-03-08', 'TRANSIT', 1200, 11, 1, true),
     (5, '2024-03-05', '2024-03-09', 'READY', 700, 11, 1, true),
     (6, '2024-03-06', '2024-03-10', 'ASSEMBLING', 630, 11, 1, true),
     (7, '2024-03-07', '2024-03-11', 'TRANSIT', 480, 11, 1, true),
     (8, '2024-03-08', '2024-03-12', 'READY', 950, 11, 1, true),
-    (9, '2024-03-09', '2024-03-13', 'READY', 610, 11, 1, false),
+    (9, '2024-03-09', '2024-03-13', 'READY', 610, 11, 1, true),
     (10, '2024-03-10', '2024-03-14', 'ASSEMBLING', 560, 11, 1, true);
 
 INSERT INTO ORDER_ITEM (order_id, good_id, quantity, price_at_purchase) VALUES

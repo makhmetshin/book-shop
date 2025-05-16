@@ -2,7 +2,6 @@ package ru.ifellow.jschool.machmetshin.service;
 
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,9 +13,10 @@ import ru.ifellow.jschool.machmetshin.database.repository.UserRepository;
 import ru.ifellow.jschool.machmetshin.dto.user.CreateUserDto;
 import ru.ifellow.jschool.machmetshin.dto.user.UserAccountDto;
 import ru.ifellow.jschool.machmetshin.dto.user.UserOrdersDto;
+import ru.ifellow.jschool.machmetshin.entity.user.Role;
 import ru.ifellow.jschool.machmetshin.entity.user.User;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
-import ru.ifellow.jschool.machmetshin.validator.EntityFoundByIdRepositoryValidator;
+import ru.ifellow.jschool.machmetshin.service.interfaces.Finder;
+import ru.ifellow.jschool.machmetshin.validator.EntityExistsValidator;
 
 
 import java.util.Collections;
@@ -26,14 +26,14 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class UserService implements Findable<Integer, User>, UserDetailsService {
+public class UserService implements Finder<Integer, User>, UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
     @Autowired
-    private final EntityFoundByIdRepositoryValidator entityFoundByIdRepositoryValidator;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final EntityExistsValidator entityExistsValidator;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -53,7 +53,7 @@ public class UserService implements Findable<Integer, User>, UserDetailsService 
     }
 
     public UserOrdersDto findByUserIdWithOrders(Integer id) {
-        User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
+        User user = entityExistsValidator.validate(userRepository.findById(id), id, User.class);
 
         List<Integer> orderIds = user.getOrders().stream()
                 .map(order -> order.getId())
@@ -71,7 +71,7 @@ public class UserService implements Findable<Integer, User>, UserDetailsService 
     }
 
     public UserAccountDto findByUserIdAccountDetails(Integer id) {
-        User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
+        User user = entityExistsValidator.validate(userRepository.findById(id), id, User.class);
 
         return UserAccountDto.builder()
                 .username(user.getUsername())
@@ -83,7 +83,7 @@ public class UserService implements Findable<Integer, User>, UserDetailsService 
     }
     @Transactional
     public void updateAccountDetails(Integer id, UserAccountDto userAccountDto) {
-        User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
+        User user = entityExistsValidator.validate(userRepository.findById(id), id, User.class);
         user.setUsername(userAccountDto.getUsername());
         user.setName(userAccountDto.getName());
         user.setSurname(userAccountDto.getSurname());
@@ -110,13 +110,14 @@ public class UserService implements Findable<Integer, User>, UserDetailsService 
                 .surname(createUserDto.getSurname())
                 .lastName(createUserDto.getLastName())
                 .email(createUserDto.getEmail())
+                .role(Role.valueOf(createUserDto.getRole()))
                 .build();
         userRepository.save(user);
     }
 
     @Transactional
     public void delete(Integer id) {
-        User user = entityFoundByIdRepositoryValidator.validate(userRepository, id, User.class);
+        User user = entityExistsValidator.validate(userRepository.findById(id), id, User.class);
         userRepository.delete(user);
     }
 }

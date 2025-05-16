@@ -5,8 +5,6 @@ import lombok.*;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,13 +1,11 @@
 package ru.ifellow.jschool.machmetshin.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifellow.jschool.machmetshin.database.repository.WarehouseRepository;
-import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.storage.Warehouse;
-import ru.ifellow.jschool.machmetshin.service.interfaces.Findable;
+import ru.ifellow.jschool.machmetshin.service.interfaces.Finder;
 
 
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class WarehouseService implements Findable<Integer, Warehouse> {
+public class WarehouseService implements Finder<Integer, Warehouse> {
 
     private final WarehouseRepository warehouseRepository;
 

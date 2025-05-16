@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor

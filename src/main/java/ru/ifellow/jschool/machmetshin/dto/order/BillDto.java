@@ -5,8 +5,6 @@ import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
 
 import java.time.LocalDate;
 @Data
-@EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +14,6 @@ public class BillDto {
     private Integer orderId;
     private StorageDto shopDto;
     private LocalDate date;
+    private Boolean returned;
 
 }

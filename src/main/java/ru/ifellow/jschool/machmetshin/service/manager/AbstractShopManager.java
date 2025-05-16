@@ -7,6 +7,8 @@ import ru.ifellow.jschool.machmetshin.dto.order.CreateOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.order.CreateWebOrderDto;
 import ru.ifellow.jschool.machmetshin.dto.order.OrderItemDtoWithGoodId;
 import ru.ifellow.jschool.machmetshin.dto.storage.StorageDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodDto;
+import ru.ifellow.jschool.machmetshin.dto.storage.StorageGoodGetAmountDto;
 import ru.ifellow.jschool.machmetshin.entity.good.Good;
 import ru.ifellow.jschool.machmetshin.entity.order.Bill;
 import ru.ifellow.jschool.machmetshin.entity.order.Order;
@@ -63,10 +65,10 @@ public abstract class AbstractShopManager {
             Integer goodId = orderItemDtoWithGoodDto.getGoodId();
             Integer amount = orderItemDtoWithGoodDto.getQuantity();
 
-            if (storageGoodService.getAmountOfGood(goodId, goodSupplierStorageId, storageType) < amount )
+            if (storageGoodService.getAmountOfGood(new StorageGoodGetAmountDto(goodId, goodSupplierStorageId, storageType)) < amount )
                 throw new IllegalStateException("not enough goods with id %d in the storage with id %d".formatted(goodId, goodSupplierStorageId));
 
-            storageGoodService.removeGood(goodId, goodSupplierStorageId, amount);
+            storageGoodService.removeGood(new StorageGoodDto(goodId, goodSupplierStorageId, amount));
             totalPrice += orderItemDtoWithGoodDto.getPriceAtPurchase() * amount;
         }
 
@@ -113,7 +115,7 @@ public abstract class AbstractShopManager {
         bill.setReturned(true);
 
         order.getOrderItems().stream()
-                .forEach(it -> storageGoodService.addGood(it.getGood().getId(), shop.getId(), it.getQuantity()));
+                .forEach(it -> storageGoodService.addGood(new StorageGoodDto(it.getGood().getId(), shop.getId(), it.getQuantity())));
 
     }
 
