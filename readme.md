@@ -83,8 +83,8 @@
 определенного автора и жанра
 
 ### Хеддеры для авторизации
-"Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" - для менеджера maxim (maxim:password10)
-"Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5" - для админа yulia (yulia:password9)
-"Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA==" - для обычного пользователя dmitry (dmitry:password8)
+ - "Authorization" = "Basic bWF4aW06cGFzc3dvcmQxMA==" - для менеджера maxim (maxim:password10)
+ - "Authorization" = "Basic eXVsaWE6cGFzc3dvcmQ5" - для админа yulia (yulia:password9)
+ - "Authorization" = "Basic ZG1pdHJ5OnBhc3N3b3JkOA==" - для обычного пользователя dmitry (dmitry:password8)
 
 powerShell curl команды для ручного проведения запросов находятся в файле curls.txt
