@@ -28,7 +28,7 @@ PATCH /api/v1/users/account - Обновление информации об а�
 /api/v1/web_shop/create_order - Создать заказ  
 /api/v1/web_shop/cancel_order?orderId="orderId" - Отменить заказ  
 /api/v1/web_shop/change_order_status?orderId="orderId" - Изменить статус заказа  
-/api/v1/web_shop/takeaway_order?orderId="orderId" - Забрать заказ из пункта выдачи и создать чек
+/api/v1/web_shop/takeaway_order?orderId="orderId" - Забрать заказ из пункта выдачи и создать чек  
 /api/v1/web_shop/return?billId="billId" - Вернуть товары по чеку  
 /api/v1/web_shop/books - Получить список доступных книг по названию, жанру, автору 
 
